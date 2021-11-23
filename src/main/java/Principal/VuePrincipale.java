@@ -27,8 +27,38 @@ import com.vaadin.flow.router.Route;
     private Button Test;
     private Button H;
     private Dialog Q;
+   
     
-    private static VerticalLayout createDialogLayout(Dialog dialog) {
+    public VuePrincipale(){
+        Button vbCoucou = new Button ("Test");
+        Button Test= new Button("Connection");
+        
+        add(vbCoucou, Test);
+        
+        Test.addClickListener((t) ->{
+        
+       Dialog dialog = new Dialog();
+        dialog.getElement().setAttribute("aria-label", "Create new employee");
+
+        VerticalLayout dialogLayout = createDialogLayout(dialog);
+        dialog.add(dialogLayout);
+        
+        
+        
+        Button button1 = new Button("Administrateur", e -> dialog.open());
+        this.add(dialog, button1);
+        
+        Button button2 = new Button("Élève", e -> dialog.open());
+        this.add(dialog, button2);
+        
+        this.Test.setVisible(false);
+       
+        
+    });
+        
+    }
+    
+    public static VerticalLayout createDialogLayout(Dialog dialog) {
         
         H2 headline = new H2("Create new employee");
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
@@ -59,28 +89,6 @@ import com.vaadin.flow.router.Route;
         return dialogLayout;
     }
     
-    public VuePrincipale() {
-    
-    this.Test= new Button("Connection");
-    this.Test.addClickListener((t) ->{
-        
-       Dialog dialog = new Dialog();
-        dialog.getElement().setAttribute("aria-label", "Create new employee");
-
-        VerticalLayout dialogLayout = createDialogLayout(dialog);
-        dialog.add(dialogLayout);
-        
-        Button button1 = new Button("Administrateur", e -> dialog.open());
-        add(dialog, button1);
-        
-        Button button2 = new Button("Élève", e -> dialog.open());
-        add(dialog, button2);
-        
-        this.Test.setVisible(false);
-       
-        
-    });
-    this.add(this.vbCoucou, this.Test); }
     
     
 }
