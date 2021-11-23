@@ -15,6 +15,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -40,7 +43,12 @@ import com.vaadin.flow.router.Route;
        Dialog dialog = new Dialog();
         dialog.getElement().setAttribute("aria-label", "Create new employee");
 
-        VerticalLayout dialogLayout = createDialogLayout(dialog);
+        VerticalLayout dialogLayout = null;
+            try {
+                dialogLayout = createDialogLayout(dialog);
+            } catch (IOException ex) {
+                Logger.getLogger(VuePrincipale.class.getName()).log(Level.SEVERE, null, ex);
+            }
         dialog.add(dialogLayout);
         
         
@@ -58,7 +66,7 @@ import com.vaadin.flow.router.Route;
         
     }
     
-    public static VerticalLayout createDialogLayout(Dialog dialog) {
+    public static VerticalLayout createDialogLayout(Dialog dialog) throws IOException {
         
         H2 headline = new H2("Create new employee");
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
