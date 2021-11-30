@@ -11,7 +11,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>16</java.version>
+        <java.version>17</java.version>
         <vaadin.version>14.7.5</vaadin.version>
     </properties>
 
@@ -177,12 +177,10 @@
                 <configuration>
                     <wait>500</wait>
                     <maxAttempts>240</maxAttempts>
+                    <compilerArgs>
+                                <arg>--enable-preview</arg>
+                    </compilerArgs>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId> 
-                <artifactId>maven-compiler-plugin</artifactId> 
-                <version>3.8.1</version>
             </plugin>
 
             <!--
@@ -201,6 +199,17 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -224,6 +233,9 @@
                             </execution>
                         </executions>
                         <configuration>
+                            <compilerArgs>
+                                <arg>--enable-preview</arg>
+                            </compilerArgs>  
                             <productionMode>true</productionMode>
                         </configuration>
                     </plugin>
@@ -271,6 +283,9 @@
                         <configuration>
                             <trimStackTrace>false</trimStackTrace>
                             <enableAssertions>true</enableAssertions>
+                            <compilerArgs>
+                                <arg>--enable-preview</arg>
+                            </compilerArgs>  
                         </configuration>
                     </plugin>
                 </plugins>
