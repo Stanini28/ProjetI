@@ -51,30 +51,32 @@ try ( Statement st = con.createStatement()) {
 st.executeUpdate(
 """
 create table Etudiants(
-idEtudiant integer primary key generated always as identity,
+id integer primary key generated always as identity,
 Nom varchar(50) not null,
 Prenom varchar(50) not null,
 email varchar(50),
 specialite varchar(20) not null,
 dateNaissance date,
-mdp varchar(50)
+mdp varchar(50),
+idSemestre integer
 )
 """);
 
 st.executeUpdate(
 """
 create table Modules(
-idModule integer primary key generated always as identity,
+id integer primary key generated always as identity,
 Intitule varchar(50) not null,
 Description varchar(100) not null,
-nbrPlaces integer
+nbrPlaces integer,
+idGroupeModules integer
 )
 """);
 
 st.executeUpdate(
 """
 create table GroupeDeModules(
-idGroupeModule integer primary key generated always as identity,
+id integer primary key generated always as identity,
 Nom varchar(50) not null,
 nbretudiants integer
 )
@@ -83,7 +85,7 @@ nbretudiants integer
 st.executeUpdate(
 """
 create table Administrateur(
-idAdmin integer primary key generated always as identity,
+id integer primary key generated always as identity,
 Nom varchar(50) not null,
 Prenom varchar(50) not null,
 email varchar(50) not null,
@@ -95,10 +97,36 @@ mdp varchar(50)
 st.executeUpdate(
 """
 create table Semestre(
-idSemestre integer primary key generated always as identity,
+id integer primary key generated always as identity,
 Année integer,
-NumeroSem integer
+NumeroSem integer,
+Ng integer
 )
+""");
+/*
+//Début partie relationnel
+st.executeUpdate(
+"""
+alter table Etudiants
+add constraint FKSemetre
+foreign key (idSemestre)
+references Semestre(id)
+""");*/
+
+st.executeUpdate(
+"""
+alter table Etudiants
+add constraint FKSemetre
+foreign key (idSemestre)
+references Semestre(id)
+""");
+
+st.executeUpdate(
+"""
+alter table Modules
+add constraint FKGroupesModules
+foreign key (idGroupesModules)
+references GroupeDeModules(id)
 """);
 }
 
