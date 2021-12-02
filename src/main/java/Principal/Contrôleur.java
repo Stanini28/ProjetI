@@ -9,5 +9,6 @@ package Principal;
  * @author stanislasallouche
  */
 public class Contrôleur {
-    www;
+   
+    private int etat; 
 }
