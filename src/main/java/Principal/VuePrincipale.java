@@ -4,6 +4,7 @@
  */
 package Principal;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -12,12 +13,14 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event;
 
 /**
  *
@@ -75,7 +78,11 @@ import java.util.logging.Logger;
             } catch (IOException ex) {
                 Logger.getLogger(VuePrincipale.class.getName()).log(Level.SEVERE, null, ex);
             }
-        
+            try {
+                Choix(dialog);
+            } catch (IOException ex) {
+                Logger.getLogger(VuePrincipale.class.getName()).log(Level.SEVERE, null, ex);
+            }
             Élève.setVisible(true);
             Administrateur.setVisible(true);
         });
@@ -139,8 +146,25 @@ import java.util.logging.Logger;
         fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
         
         
-
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        
+        Button cancelButton = new Button("Cancel");
+        
+        cancelButton.addClickListener((event -> { try {
+            dialog.removeAll();
+            
+           
+            VerticalLayout H = Choix(dialog);
+            dialog.add(H);
+            } catch (IOException ex) {
+                Logger.getLogger(VuePrincipale.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        })
+);
+        
+        
+        
+        
+        
         Button saveButton = new Button("Save", e -> dialog.close());
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         HorizontalLayout buttonLayout = new HorizontalLayout(cancelButton,
@@ -180,8 +204,19 @@ import java.util.logging.Logger;
         fieldLayout.setPadding(false);
         fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
 
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        Button cancelButton = new Button("Cancel");
         
+       cancelButton.addClickListener((event -> { try {
+            dialog.removeAll();
+            
+           
+            VerticalLayout H = Choix(dialog);
+            dialog.add(H);
+            } catch (IOException ex) {
+                Logger.getLogger(VuePrincipale.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        })
+);
         
         Button saveButton = new Button("Save", e -> dialog.close());
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -198,9 +233,7 @@ import java.util.logging.Logger;
 
         return dialogLayout;
     }
-    
-   
-        
+      
     
     
 }
