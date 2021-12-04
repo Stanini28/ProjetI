@@ -4,7 +4,11 @@
  */
 package Principal;
 
+import static Principal.VuePrincipale.inscriptionExistsE;
+import static Principal.VuePrincipale.inscriptionExistsA;
 import java.awt.event.ActionEvent;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  *
@@ -22,6 +26,14 @@ public class Contrôleur {
     public void changeEtat(int etat){
         if (etat == 1){
             //TOUS LES BOUTONS SAUF CONNEXION DESACTIVÉS';
+            this.vue.getGroupe4().setVisible(false);
+            this.vue.getGroupe1().setVisible(false);
+            this.vue.getGroupe2().setVisible(false);
+            this.vue.getGroupe3().setVisible(false);
+            this.vue.getLogout().setVisible(false);
+            
+            
+            
                     
         }
         
@@ -46,6 +58,27 @@ public class Contrôleur {
     
     public void ConnexÉle(ActionEvent t){
         this.changeEtat(200);
+    }
+    
+    
+    
+    public void VérifConn(String Email, String MDP) throws SQLException{
+        
+            Connection con = ConnectSGBD.connectionLocalPostgresql();
+            
+            
+                if (inscriptionExistsE(con, Email, MDP) == true ){
+                    this.changeEtat(200);
+                }else if(inscriptionExistsA(con, Email, MDP)== true){
+                    this.changeEtat(10);
+                }
+                    
+           
+                
+            
+                
+            
+        
     }
     
 }
