@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
+
 /**
  *
  * @author Admin
@@ -35,15 +36,12 @@ Connection con = DriverManager.getConnection(
 con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 return con;
 }
-
-    public static void main(String[] args) {
+  
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {    
 try ( Connection con = connectPostgresql("localhost", 5432,
-"postgres", "postgres", "passe")) {
-schema(con); // ici le programme
-} catch (ClassNotFoundException | SQLException ex) {
-/*throw new Error(ex);*/
-}
-
+"postgres", "postgres", "pass")) {
+    test(con);
+    }
 }
 
  public static void schema(Connection con) throws SQLException {
@@ -54,11 +52,10 @@ create table Etudiants(
 id integer primary key generated always as identity,
 Nom varchar(50) not null,
 Prenom varchar(50) not null,
-email varchar(50),
+email varchar(50) not null,
 specialite varchar(20) not null,
 dateNaissance date,
-mdp varchar(50),
-idSemestre integer
+mdp varchar(50)
 )
 """);
 
@@ -68,8 +65,7 @@ create table Modules(
 id integer primary key generated always as identity,
 Intitule varchar(50) not null,
 Description varchar(100) not null,
-nbrPlaces integer,
-idGroupeModules integer
+nbrPlaces integer
 )
 """);
 
@@ -98,11 +94,12 @@ st.executeUpdate(
 """
 create table Semestre(
 id integer primary key generated always as identity,
+Semestre integer,
 Année integer,
-NumeroSem integer,
-Ng integer
+NumeroSem integer
 )
 """);
+
 /*
 //Début partie relationnel
 st.executeUpdate(
@@ -116,6 +113,7 @@ references Semestre(id)
 st.executeUpdate(
 """
 alter table Etudiants
+add column idSemestre integer,
 add constraint FKSemetre
 foreign key (idSemestre)
 references Semestre(id)
@@ -124,6 +122,7 @@ references Semestre(id)
 st.executeUpdate(
 """
 alter table Modules
+add column idGroupesModules integer,
 add constraint FKGroupesModules
 foreign key (idGroupesModules)
 references GroupeDeModules(id)
@@ -131,16 +130,17 @@ references GroupeDeModules(id)
 }
 
 }
-    public static void createEtudiantAlea(Connection con, int nbr, LocalDate minNaissance, LocalDate maxNaissance,
+    public static void createEtudiantAlea(Connection con, int nbr,
             Random r) throws SQLException {
         List<String> noms = EtudiantAlea.noms();
         List<String> prenoms = EtudiantAlea.prenoms();
         List<String> specialite = EtudiantAlea.specialite();
         List<String> email = EtudiantAlea.email();
+        //List<String> date = EtudiantAlea.date();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               INSERT INTO Etudiants (nom, prenom, email, specialite, dateNaissance, mdp)
-                 VALUES (?,?,?)
+               INSERT INTO Etudiants (nom, prenom, email, specialite)
+                 VALUES (?,?,?,?)
                """)) {
             con.setAutoCommit(false);
 
@@ -148,24 +148,72 @@ references GroupeDeModules(id)
                 pst.setString(1, noms.get(r.nextInt(noms.size())));
                 pst.setString(2, prenoms.get(r.nextInt(prenoms.size())));
                 pst.setString(4, specialite.get(r.nextInt(specialite.size())));
-                pst.setString(5, email.get(r.nextInt(email.size())));
-                LocalDate dalea = dateAleaBetween(minNaissance, maxNaissance, r);
-                Date asDate = Date.valueOf(dalea);
-                pst.setDate(3, asDate);
+                pst.setString(3, email.get(r.nextInt(email.size())));
+                // pst.setString(3, date.get(r.nextInt(date.size())));
+                // Date asDate = Date.valueOf(dalea);
+                // pst.setDate(3, asDate);
+                // LocalDate minNaissance, LocalDate maxNaissance
                 pst.executeUpdate();
             }
             con.commit();
         } catch (SQLException ex) {
             con.rollback();
-            System.out.println("ERROR : problem during createPersonnesAlea");
+            System.out.println("ERROR : problem during createEtudiantAlea");
             throw ex;
         }
     }
-     public static LocalDate dateAleaBetween(LocalDate min, LocalDate max, Random r) {
+    /*public static LocalDate dateAleaBetween(LocalDate min, LocalDate max, Random r) {
         long minDay = min.toEpochDay();
         long maxDay = max.toEpochDay();
         long delta = (long) (r.nextDouble() * (maxDay - minDay + 1));
         return min.plusDays(delta);
-     }
-}
+     }*/
+    public static void createAdministrateur(Connection con, int nbr,
+            Random r) throws SQLException {
+        List<String> noms = Administrateur.noms();
+        List<String> prenoms = Administrateur.prenoms();
+        List<String> mdp = Administrateur.mdp();
+        List<String> email = Administrateur.email();
+        //List<String> date = EtudiantAlea.date();
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+               INSERT INTO Administrateur (nom, prenom, email, mdp)
+                 VALUES (?,?,?,?)
+               """)) {
+            con.setAutoCommit(false);
+
+            for (int i = 0; i < nbr; i++) {
+                pst.setString(1, noms.get(r.nextInt(noms.size())));
+                pst.setString(2, prenoms.get(r.nextInt(prenoms.size())));
+                pst.setString(4, mdp.get(r.nextInt(mdp.size())));
+                pst.setString(3, email.get(r.nextInt(email.size())));
+                // pst.setString(3, date.get(r.nextInt(date.size())));
+                // Date asDate = Date.valueOf(dalea);
+                // pst.setDate(3, asDate);
+                // LocalDate minNaissance, LocalDate maxNaissance
+                pst.executeUpdate();
+            }
+            con.commit();
+        } catch (SQLException ex) {
+            con.rollback();
+            System.out.println("ERROR : problem during createEtudiantAlea");
+            throw ex;
+        }
+    }
     
+    public static void createExemple(Connection con) throws SQLException {
+    Random r = new Random(885214156);
+    createEtudiantAlea(con, 50, r);
+    createAdministrateur(con, 15,r);
+    }
+     
+    
+    public static void test (Connection con){
+        try {
+            schema(con); // ici le programme
+            createExemple(con);
+        } catch (SQLException ex) {
+            System.out.println("Erreur : " + ex.getLocalizedMessage());
+        }
+    }
+}

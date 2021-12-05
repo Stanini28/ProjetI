@@ -91,9 +91,14 @@ public class EtudiantAlea {
             return t[3];
         }).unordered().distinct().toList();
     }
-            
-    public static void afficheTousLesEtudiants(Connection con) throws SQLException {
-       try(Statement st = con.createStatement()){
+    public static List<String> date() {
+        return Arrays.stream(EtudiantAlea).map((t) -> {
+            return t[5];
+        }).unordered().distinct().toList();
+    }
+    
+        public static void afficheTousLesEtudiants(Connection con) throws SQLException {
+        try(Statement st = con.createStatement()){
            ResultSet res = st.executeQuery("select * from Etudiants");
            while (res.next()){
                int id  = res.getInt("id");
@@ -101,11 +106,11 @@ public class EtudiantAlea {
                String nom = res.getString("nom");
                String email = res.getString("email");
                String specialite = res.getString("specialité");
-               java.sql.Date dn = res.getDate("6");
-               System.out.println(id+" : "+ nom + " né le "+ dn);
+               // String date = res.getString("date");
+               // java.sql.Date dn = res.getDate("6");
+               // System.out.println(id+" : "+ nom + " né le "+ dn);
            }
        }
     }
-    
 
 }
