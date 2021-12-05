@@ -33,13 +33,23 @@ public class VuePrincipale extends VerticalLayout {
     private Button Connection;
     private Button Élève;
     private Button Administrateur;
+    private Button cancelA;
+    private Button cancelE;
+    private Button LoginE;
+    private Button LoginA;
     private Button Groupe1;
     private Button Groupe2;
     private Button Groupe3;
     private Button Groupe4;
     private Button Logout;
+    private Contrôleur Controleur;
+    private HorizontalLayout HL;
+    private HorizontalLayout HLA;
+    private HorizontalLayout HLE;
+    
+    private int etat;
 
-    public VuePrincipale() throws IOException {
+    public VuePrincipale(int etat) throws IOException {
 
         Dialog dialog = new Dialog();
         dialog.getElement().setAttribute("aria-label", "Create new employee");
@@ -48,16 +58,43 @@ public class VuePrincipale extends VerticalLayout {
         dialog.add(dialogLayout);
         add(dialog, Connection);
 
-        Button Groupe1 = new Button("Groupe1");
-        Button Groupe2 = new Button("Groupe2");
-        Button Groupe3 = new Button("Groupe3");
-        Button Groupe4 = new Button("Groupe4");
-
-        HorizontalLayout HL = new HorizontalLayout();
+        
+        this.Groupe1 = new Button("Groupe1");
+        this.Groupe2 = new Button("Groupe2");
+        this.Groupe3 = new Button("Groupe3");
+        this.Groupe4 = new Button("Groupe4");
+        this.Connection= new Button("Connexion");
+        this.LoginA= new Button("Login");
+        this.LoginE= new Button("Login");
+        this.cancelA= new Button("Cancel");
+        this.cancelE= new Button("Cancel");
+        this.Logout= new Button ("Déconnexion");
+        this.HLE= new HorizontalLayout();
+        this.HLA= new HorizontalLayout();
+        
+        HLA.add(Logout);
+        HLE.add(Logout);
+        
+          this.HL = new HorizontalLayout();
         HL.add(Groupe1, Groupe2, Groupe3, Groupe4);
-        add(HL);
-
+        add(HL, HLE, HLA);
+        
+        
+        this.Controleur = new Contrôleur(this);
+        this.Controleur.changeEtat(etat);
+        
+        
+        
     }
+    
+    public VuePrincipale() throws IOException{
+        this(1);
+    }
+    
+    
+    
+    
+    
 
     public VerticalLayout Choix(Dialog dialog) throws IOException {
 
@@ -65,8 +102,8 @@ public class VuePrincipale extends VerticalLayout {
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
                 .set("font-size", "1.5em").set("font-weight", "bold");
 
-        Button Élève = new Button("Un Élève");
-        Button Administrateur = new Button("Un Administrateur");
+        this.Élève = new Button("Un Élève");
+        this.Administrateur = new Button("Un Administrateur");
 
         Élève.addClickListener(event -> {
             try {
@@ -81,11 +118,7 @@ public class VuePrincipale extends VerticalLayout {
             } catch (IOException ex) {
                 Logger.getLogger(VuePrincipale.class.getName()).log(Level.SEVERE, null, ex);
             }
-            try {
-                Choix(dialog);
-            } catch (IOException ex) {
-                Logger.getLogger(VuePrincipale.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            
             Élève.setVisible(true);
             Administrateur.setVisible(true);
         });
@@ -136,9 +169,9 @@ public class VuePrincipale extends VerticalLayout {
         fieldLayout.setPadding(false);
         fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
 
-        Button cancelButton = new Button("Cancel");
+        
 
-        cancelButton.addClickListener((event -> {
+        this.cancelA.addClickListener((event -> {
             try {
                 dialog.removeAll();
 
@@ -150,24 +183,26 @@ public class VuePrincipale extends VerticalLayout {
         })
         );
 
-        Button saveButton = new Button("Login");
+        
         //FAIRE LE CLICKLISTENER POUR VÉRIFIER SI C'EST BON !
         
-        saveButton.addClickListener((event -> {
+        this.LoginA.addClickListener((event -> {
             Connection con = ConnectSGBD.connectionLocalPostgresql();
             try {
                 if (inscriptionExistsA(con, Email, MDP)== false){
                     fieldLayout.add("Erreur sur le login ou le MDP");
-                };
+                } else if (inscriptionExistsA(con, Email, MDP) ==true){
+                    this.Controleur.changeEtat(10);
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(VuePrincipale.class.getName()).log(Level.SEVERE, null, ex);
             }
         
         }));
 
-        saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        HorizontalLayout buttonLayout = new HorizontalLayout(cancelButton,
-                saveButton);
+        this.LoginA.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        HorizontalLayout buttonLayout = new HorizontalLayout(this.cancelA,
+                this.LoginA);
         buttonLayout
                 .setJustifyContentMode(FlexComponent.JustifyContentMode.END);
 
@@ -199,9 +234,9 @@ public class VuePrincipale extends VerticalLayout {
         
         
 
-        Button cancelButton = new Button("Cancel");
+        
 
-        cancelButton.addClickListener((event -> {
+        this.cancelE.addClickListener((event -> {
             try {
                 dialog.removeAll();
 
@@ -213,14 +248,16 @@ public class VuePrincipale extends VerticalLayout {
         })
         );
 
-        Button saveButton = new Button("Login");
         
-        saveButton.addClickListener((event -> {
+        
+        this.LoginE.addClickListener((event -> {
             Connection con = ConnectSGBD.connectionLocalPostgresql();
             try {
                 if (inscriptionExistsE(con, Email, MDP)== false){
                     fieldLayout.add("Erreur sur le login ou le MDP");
-                };
+                } else if (inscriptionExistsE(con, Email, MDP) == true) {
+                    this.Controleur.changeEtat(200);
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(VuePrincipale.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -231,9 +268,9 @@ public class VuePrincipale extends VerticalLayout {
                 
 
         //FAIRE LE CLICKLISTENER POUR VÉRIFIER SI C'EST BON !
-        saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        HorizontalLayout buttonLayout = new HorizontalLayout(cancelButton,
-                saveButton);
+        this.LoginE.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        HorizontalLayout buttonLayout = new HorizontalLayout(this.cancelE,
+                this.LoginE);
         buttonLayout
                 .setJustifyContentMode(FlexComponent.JustifyContentMode.END);
 
@@ -301,4 +338,19 @@ public class VuePrincipale extends VerticalLayout {
         return Logout;
     }
 
+    public HorizontalLayout getHL() {
+        return HL;
+    }
+
+    public HorizontalLayout getHLA() {
+        return HLA;
+    }
+
+    public HorizontalLayout getHLE() {
+        return HLE;
+    }
+
+    
+    
+    
 }
