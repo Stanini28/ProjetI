@@ -285,7 +285,7 @@ public class VuePrincipale extends VerticalLayout {
 
     public static boolean inscriptionExistsE(Connection con, String email , String mdp) throws SQLException {
         try ( Statement st = con.createStatement();  ResultSet test = st.executeQuery("select * from etudiants where "
-                + "etudiant = " + email
+                + "email = " + email
                 + " and mdp = " + mdp)) {
             return test.next();
         }
@@ -293,7 +293,7 @@ public class VuePrincipale extends VerticalLayout {
     
     public static boolean inscriptionExistsA(Connection con, String email , String mdp) throws SQLException {
         try ( Statement st = con.createStatement();  ResultSet test = st.executeQuery("select * from administrateur where "
-                + "Administrateur = " + email
+                + "email = " + email
                 + " and mdp = " + mdp)) {
             return test.next();
         }
