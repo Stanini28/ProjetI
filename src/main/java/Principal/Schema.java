@@ -65,7 +65,7 @@ create table Modules(
 id integer primary key generated always as identity,
 Intitule varchar(50) not null,
 Description varchar(100) not null,
-nbrPlaces integer
+nbrPlaces varchar(20)
 )
 """);
 
@@ -168,13 +168,39 @@ references GroupeDeModules(id)
         long delta = (long) (r.nextDouble() * (maxDay - minDay + 1));
         return min.plusDays(delta);
      }*/
+    public static void createModules(Connection con, int nbr,
+            Random r) throws SQLException {
+        List<String> intitule = Module.intitule();
+        List<String> description = Module.description();
+        List<String> nbrplaces = Module.nbrplaces();
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+               INSERT INTO Modules (intitule, description, nbrplaces)
+                 VALUES (?, ?, ?)
+               """)) {
+            con.setAutoCommit(false);
+
+            for (int i = 0; i < nbr; i++) {
+                pst.setString(1, intitule.get(r.nextInt(intitule.size())));
+                pst.setString(2, description.get(r.nextInt(description.size())));
+                pst.setString(3, nbrplaces.get(r.nextInt(nbrplaces.size())));
+                pst.executeUpdate();
+            }
+            con.commit();
+        } catch (SQLException ex) {
+            con.rollback();
+            System.out.println("ERROR : problem during createEtudiantAlea");
+            throw ex;
+        }
+    }
+    
     public static void createAdministrateur(Connection con, int nbr,
             Random r) throws SQLException {
         List<String> noms = Administrateur.noms();
         List<String> prenoms = Administrateur.prenoms();
         List<String> mdp = Administrateur.mdp();
         List<String> email = Administrateur.email();
-        //List<String> date = EtudiantAlea.date();
+        //List<String> date = Administrateur.date();
         try (PreparedStatement pst = con.prepareStatement(
                 """
                INSERT INTO Administrateur (nom, prenom, email, mdp)
@@ -205,12 +231,13 @@ references GroupeDeModules(id)
     Random r = new Random(885214156);
     createEtudiantAlea(con, 50, r);
     createAdministrateur(con, 15,r);
+    createModules(con, 9, r);
     }
      
     
     public static void test (Connection con){
         try {
-            schema(con); // ici le programme
+            schema(con);
             createExemple(con);
         } catch (SQLException ex) {
             System.out.println("Erreur : " + ex.getLocalizedMessage());
