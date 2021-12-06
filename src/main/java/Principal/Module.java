@@ -50,7 +50,7 @@ public class Module {
     
     public static void afficheTousLesModules(Connection con) throws SQLException {
         try(Statement st = con.createStatement()){
-           ResultSet res = st.executeQuery("select * from Administrateur");
+           ResultSet res = st.executeQuery("select * from Modules");
            while (res.next()){
                int id  = res.getInt("id");
                String nomModules = res.getString("Noms des modules");
