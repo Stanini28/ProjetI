@@ -69,7 +69,7 @@ public class VuePrincipale extends VerticalLayout {
         this.LG.addLoginListener(event ->{
             int j=0;
             for (int i=0; i< email.size(); i++){
-                if ( event.getUsername()== email.get(i) && event.getPassword()== mdp.get(i)){
+                if ( event.getUsername() == email.get(i) && event.getPassword()== mdp.get(i)){
                     Notification.show("aaaa");
                     j=j+1;
                 }
