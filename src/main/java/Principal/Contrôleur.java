@@ -4,8 +4,6 @@
  */
 package Principal;
 
-import static Principal.VuePrincipale.inscriptionExistsE;
-import static Principal.VuePrincipale.inscriptionExistsA;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.awt.event.ActionEvent;
@@ -33,17 +31,12 @@ public class Contrôleur {
     public void changeEtat(int etat) {
         if (etat == 1) {
            this.vue.getHL().setVisible(false);
-           this.vue.getHLA().setVisible(false);
-           this.vue.getHLE().setVisible(false);
         }
 
         if (etat == 10) {
-            this.vue.getHLA().setVisible(true);
         }
 
         if (etat == 200) {
-            this.vue.getHL().setVisible(true);
-            this.vue.getHLE().setVisible(true);
         }
 
     };
