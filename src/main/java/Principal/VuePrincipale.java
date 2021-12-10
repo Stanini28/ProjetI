@@ -63,21 +63,23 @@ public class VuePrincipale extends VerticalLayout {
             this.add(new Login(this, Connection, this.LG));
         });
 
-        List<String> mdp = Administrateur.mdp();
-        List<String> email = Administrateur.email();
         
         this.LG.addLoginListener(event ->{
-            int j=0;
-            for (int i=0; i< email.size(); i++){
-                if ( event.getUsername().equals(email.get(i)) && event.getPassword().equals(mdp.get(i))){
-                    Notification.show("aaaa");
-                    j=j+1;
-                }
+           
+                String Log = event.getUsername();
+                String MDP= event.getPassword();
+                Notification.show(Log + "kkk"+ MDP);
+                
+               try {  
+                inscriptionExistsA(this.con, Log, MDP);
+                
+                
+            
                
+            } catch (SQLException ex) {
+                Logger.getLogger(VuePrincipale.class.getName()).log(Level.SEVERE, null, ex);
             }
-           if (j==0){
-                   Notification.show("Erreur dans la connexion!");
-               }
+            
         });
         
         this.Logout = new Button("Déconnexion");
