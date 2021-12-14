@@ -7,13 +7,13 @@ package Principal;
 import static Principal.Schema.connectPostgresql;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteConfiguration;
+import com.vaadin.flow.router.RouteParameters;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,25 +27,47 @@ import java.util.logging.Logger;
  */
 @Route("")
 public class Login extends Composite<LoginOverlay> {
+    
+    private String IDA;
+   public String IDE;
+   private String Login;
+   private String MDP;
+   private VueAdministrateur VA;
+   private int Etat;
 
     public Login() throws ClassNotFoundException, SQLException {
         Connection con = connectPostgresql("localhost", 5432,
                 "postgres", "postgres", "passe");
         
+        
+        
         LoginOverlay loginoverlay = getContent();
         loginoverlay.setOpened(true);
 
         loginoverlay.addLoginListener(event -> {
-
+            this.Login= event.getUsername();
+            this.MDP = event.getPassword();
+            
           
             
             try {
-                if(Test(con, event.getUsername(), event.getPassword())){
+                if(ExistenceE(con, Login, MDP)){
                     Notification.show("AHBFDUEIZK");
-                    UI.getCurrent().navigate("Principale");
-                }else{
-                    Notification.show("NON");
-                }
+                    this.IDE= IDe(con, Login, MDP);
+                    UI.getCurrent().navigate("Etudiant/");
+                    
+                }else
+                    if(ExistenceA(con, Login, MDP)){
+                    Notification.show("AHBFDUEIZK");
+                    
+                    this.IDA= IDa(con, Login, MDP);
+                    UI.getCurrent().navigate(VueAdministrateur.class, new RouteParameters("userID",this.IDA));
+                    System.out.println(this.IDA);//Fonctionne bien !!
+                    
+                    
+                }else {
+                       Notification.show("NON"); 
+                    }
             } catch (SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 Notification.show("dez");
@@ -53,36 +75,74 @@ public class Login extends Composite<LoginOverlay> {
 
         });
     }
-
-//    public static Notification inscriptionExistsE(Connection con, String email, String mdp) throws SQLException {
-//        try ( Statement st = con.createStatement();  ResultSet test = st.executeQuery("select * from etudiants where "
-//                + "email = " + email
-//                + " and mdp = " + mdp)) {
-//            if (!test.next()) {
-//                Notification.show("Problème dans le mot de passe ou le login");
-//            } else {
-//                Notification.show("C'est bon!");
-//            }
-//
-//        }
-//        return
-//    }
-
-////    public static boolean inscriptionExists(Connection con, String EM, String MDP) throws SQLException {
-////        try (Statement st = con.createStatement();
-////                ResultSet test = st.executeQuery("select nom,mdp from Administrateur where "
-////                        + " nom = " + EM
-////                        + " and mdp = " + MDP)) {
-////            return test.next();
-////        }
-////    }
     
-    public static boolean Test(Connection con, String login, String MDP) throws SQLException{
+    public static boolean ExistenceA(Connection con, String login, String MDP) throws SQLException{
         String strql= "SELECT * from Administrateur WHERE email ='"+ login +"'AND mdp ='" +
                 MDP + "'";
         Statement st = con.createStatement(); 
             ResultSet resultset = st.executeQuery(strql);
             return resultset.next();
     }
+    
+    
+    public static boolean ExistenceE(Connection con, String login, String MDP) throws SQLException{
+        String strql= "SELECT * from etudiants WHERE email ='"+ login +"'AND mdp ='" +
+                MDP + "'";
+        Statement st = con.createStatement(); 
+            ResultSet resultset = st.executeQuery(strql);
+            
+            return resultset.next();
+    }
 
+        
+     public static String IDe(Connection con, String login, String MDP) throws SQLException{
+        String strql= "SELECT * from etudiants WHERE email ='"+ login +"'AND mdp ='" +
+                MDP + "'";
+        Statement st = con.createStatement(); 
+            ResultSet resultset = st.executeQuery(strql);
+            String id ="";
+            while(resultset.next()){
+                id = resultset.getString("id");
+            }
+            return id;
+    }
+
+    public String getLogin() {
+        return Login;
+    }
+
+    public String getMDP() {
+        return MDP;
+    }
+    
+     public static String IDa(Connection con, String login, String MDP) throws SQLException{
+        String strql= "SELECT * from administrateur WHERE email ='"+ login +"'AND mdp ='" +
+                MDP + "'";
+        Statement st = con.createStatement(); 
+            ResultSet resultset = st.executeQuery(strql);
+            String id="";
+            while(resultset.next()){
+                id = resultset.getString("id");
+                
+            }
+            return id;
+    }
+
+    public String getIDA() {
+        return IDA;
+    }
+    
+    
+
+    
+
+  
+     
+   
+   
+    
 }
+    
+
+    
+
