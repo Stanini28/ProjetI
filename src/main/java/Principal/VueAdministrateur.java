@@ -3,13 +3,12 @@ package Principal;
 import static Principal.Schema.connectPostgresql;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinService;
@@ -33,31 +32,42 @@ public class VueAdministrateur extends AppLayout {
     private Tab CreatMod;
     private Connection con;
     private String IDA;
+    private String n;
+    private AfterNavigationEvent AF;
 
     public VueAdministrateur() throws ClassNotFoundException, SQLException {
 
-        this.HL = new HorizontalLayout();
         this.CréatEtud = new Tab("Création d'Étudiant");
         this.CreatMod = new Tab("Création d'un Module");
         this.con = connectPostgresql("localhost", 5432,
                 "postgres", "postgres", "passe");
+        
+        
 
         VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
         HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
+    
         
-        if (httpServletRequest.getRequestURL().length()== 39){
-        this.IDA = httpServletRequest.getRequestURL().subSequence(37, 39).toString();
-        }else if(httpServletRequest.getRequestURL().length()== 38){
-        this.IDA = httpServletRequest.getRequestURL().subSequence(37, 38).toString();
-        }
+        if (httpServletRequest.getRequestURL().length()==38 ){
+         this.IDA = httpServletRequest.getRequestURL().subSequence(37, 38).toString();}
+        else {
+            this.IDA = httpServletRequest.getRequestURL().subSequence(37, 39).toString();}
+        
+            this.n= httpServletRequest.getRequestURL().toString();
+       
+           
+        
+        
+       
+        
         
         
         Tabs tab = new Tabs(this.CreatMod, this.CréatEtud);
         ;
 
         tab.addSelectedChangeListener(event -> {
-
-            Notification.show(this.IDA);
+            System.out.println(n);
+         Notification.show(this.IDA);
         });
 
         DrawerToggle toggle = new DrawerToggle();
@@ -65,13 +75,13 @@ public class VueAdministrateur extends AppLayout {
         tab.setHeight("240px");
         tab.setWidth("240px");
 
-        H1 title = new H1("Administrateur/Administratrice : " + this.Nom(IDA, con));
-        title.getStyle()
-                .set("font-size", "var(--lumo-font-size-l)")
-                .set("margin", "0");
+//        H1 title = new H1("Administrateur/Administratrice : " + this.Nom(IDA, con));
+//        title.getStyle()
+//                .set("font-size", "var(--lumo-font-size-l)")
+//                .set("margin", "0");
         
         addToDrawer(tab);
-        this.addToNavbar(toggle, title);
+        this.addToNavbar(toggle);
     }
     
     
@@ -89,5 +99,11 @@ public class VueAdministrateur extends AppLayout {
             
             return P + " " + N;
     }
+    
+     
+       
+         
+        
+    
 
 }
