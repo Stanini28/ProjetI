@@ -227,11 +227,38 @@ references GroupeDeModules(id)
         }
     }
     
+     public static void createSemestres(Connection con,int maxAnnee) 
+              throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+                 INSERT INTO Semestre (Année,Semestre,NumeroSem)
+                 VALUES (?,?,?)
+               """)) {
+            con.setAutoCommit(false);
+            int NumeroSemestre=1;
+            for (int i = 1 ; i <= maxAnnee; i++) {
+                for (int s = 1; s <= 2; s++) {
+                    pst.setInt(1, i);
+                    pst.setInt(2, s);
+                    pst.setInt(3,NumeroSemestre);
+                    pst.executeUpdate();
+                    NumeroSemestre=NumeroSemestre+1;
+                }
+            }
+            con.commit();
+        } catch (SQLException ex) {
+            con.rollback();
+            System.out.println("ERROR : problem during createSemestres");
+            throw ex;
+        }
+    }
+     
     public static void createExemple(Connection con) throws SQLException {
     Random r = new Random(885214156);
     createEtudiantAlea(con, 50, r);
     createAdministrateur(con, 15,r);
     createModules(con, 9, r);
+    createSemestres(con,5);
     }
      
     
