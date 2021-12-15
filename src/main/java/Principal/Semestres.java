@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 package Principal;
-import static fr.insa.beuvron.cours.m3New.tds.TD1.BdDTD1.foreignKeys;
-import static fr.insa.beuvron.cours.m3New.tds.TD1.BdDTD1.tables;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
