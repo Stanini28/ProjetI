@@ -97,7 +97,7 @@ public class EtudiantAlea {
         }).unordered().distinct().toList();
     }
     
-        public static void afficheTousLesEtudiants(Connection con) throws SQLException {
+    public static void afficheTousLesEtudiants(Connection con) throws SQLException {
         try(Statement st = con.createStatement()){
            ResultSet res = st.executeQuery("select * from Etudiants");
            while (res.next()){
@@ -112,5 +112,5 @@ public class EtudiantAlea {
            }
        }
     }
-
 }
+        

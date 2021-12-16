@@ -15,6 +15,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
+import fr.insa.beuvron.utils.ConsoleFdB;
 
 
 /**
@@ -40,7 +41,10 @@ return con;
     public static void main(String[] args) throws ClassNotFoundException, SQLException {    
 try ( Connection con = connectPostgresql("localhost", 5432,
 "postgres", "postgres", "pass")) {
-    test(con);
+    //schema(con);
+    //createExemple(con);
+    //test1(con);
+    test2(con);
     }
 }
 
@@ -252,22 +256,56 @@ references GroupeDeModules(id)
             throw ex;
         }
     }
-     
+         
     public static void createExemple(Connection con) throws SQLException {
     Random r = new Random(885214156);
     createEtudiantAlea(con, 50, r);
     createAdministrateur(con, 15,r);
     createModules(con, 9, r);
     createSemestres(con,5);
-    }
-     
+    }  
     
-    public static void test (Connection con){
-        try {
-            schema(con);
-            createExemple(con);
-        } catch (SQLException ex) {
-            System.out.println("Erreur : " + ex.getLocalizedMessage());
+    public static void CreationUnEtudiant (Connection con, String noms, String prenoms, String email, String specialite, String mdp) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+        """
+        insert into Etudiants (nom, prenom, email, specialite, mdp)
+        values (?,?,?,?,?)
+        """)){
+            pst.setString(1, noms);
+            pst.setString(2, prenoms);
+            pst.setString(3, email);
+            pst.setString(4, specialite);
+            pst.setString(5, mdp);
+            pst.executeUpdate();
         }
+    }
+    
+    public static void CreationUnModule (Connection con, String intitule, String description, String nbrplaces) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+        """
+        insert into Modules (intitule, description, nbrplaces)
+        values (?,?,?)
+        """)){
+            pst.setString(1, intitule);
+            pst.setString(2, description);
+            pst.setString(3, nbrplaces);
+            pst.executeUpdate();
+        }
+    }
+    
+    public static void test1 (Connection con) throws SQLException{
+        String noms = ConsoleFdB.entreeString("nom :");
+        String prenoms = ConsoleFdB.entreeString("prenom :");
+        String email = ConsoleFdB.entreeString("email :");
+        String specialite = ConsoleFdB.entreeString("specialite :");
+        String mdp = ConsoleFdB.entreeString("mdp :");
+        CreationUnEtudiant(con, noms, prenoms, email, specialite, mdp);
+    }
+    
+    public static void test2(Connection con) throws SQLException{
+        String intitule = ConsoleFdB.entreeString("intitule du module:");
+        String description = ConsoleFdB.entreeString("description :");
+        String nbrplaces = ConsoleFdB.entreeString("Nombre de places :");
+        CreationUnModule(con, intitule, description, nbrplaces);
     }
 }

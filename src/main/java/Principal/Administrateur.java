@@ -6,6 +6,7 @@
 package Principal;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -81,4 +82,30 @@ public class Administrateur {
            }
        }
     }
+        /*public static void CreationUnEtudiant (Connection con, String noms, String prenoms, String email, String specialite) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+        """
+        insert into Etudiants (noms, prenoms, email, specialite)
+        values (?,?,?,?)
+        """)){
+            pst.setString(1, noms);
+            pst.setString(2, prenoms);
+            pst.setString(3, email);
+            pst.setString(4, specialite);
+            pst.executeUpdate();
+        }
+    }*/
+    
+    /*public static void CreationUnModule (Connection con, String intitule, String description, String nbrplaces) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+        """
+        insert into Modules (intitule, description, nbrplaces)
+        values (?,?,?)
+        """)){
+            pst.setString(1, intitule);
+            pst.setString(2, description);
+            pst.setString(3, nbrplaces);
+            pst.executeUpdate();
+        }
+    }*/
 }

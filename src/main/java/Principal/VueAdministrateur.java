@@ -40,7 +40,7 @@ public class VueAdministrateur extends AppLayout {
         this.CréatEtud = new Tab("Création d'Étudiant");
         this.CreatMod = new Tab("Création d'un Module");
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "passe");
+                "postgres", "postgres", "pass");
 
         VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
         HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
