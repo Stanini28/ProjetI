@@ -58,13 +58,8 @@ public class Login extends Composite<LoginOverlay> {
                     
                 }else
                     if(ExistenceA(con, Login, MDP)){
-                    Notification.show("AHBFDUEIZK");
-                    
                     this.IDA= IDa(con, Login, MDP);
                     UI.getCurrent().navigate(VueAdministrateur.class, new RouteParameters("userID",this.IDA));
-                    System.out.println(this.IDA);//Fonctionne bien !!
-                    
-                    
                 }else {
                        Notification.show("NON"); 
                     }
