@@ -5,6 +5,7 @@
 package Principal;
 
 import static Principal.Schema.connectPostgresql;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinService;
@@ -19,13 +20,13 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author stanislasallouche
  */
-@Route(value = "Etudiant/:userID")
-public class VueÉtudiant {
+@Route(value = "Etudiant/:userID", layout= VueE.class)
+public class VueEtudiant extends HorizontalLayout {
     
     private Connection con;
     private String IDE;
     
-    public VueÉtudiant() throws ClassNotFoundException, SQLException {
+    public VueEtudiant() throws ClassNotFoundException, SQLException {
     this.con = connectPostgresql("localhost", 5432,
                 "postgres", "postgres", "passe");
     
