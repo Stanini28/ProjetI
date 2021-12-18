@@ -34,10 +34,11 @@ public class Login extends Composite<LoginOverlay> {
    private String MDP;
    private VueAdministrateur VA;
    private int Etat;
+   
 
     public Login() throws ClassNotFoundException, SQLException {
         Connection con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
+                "postgres", "postgres", "passe");
         
         
         

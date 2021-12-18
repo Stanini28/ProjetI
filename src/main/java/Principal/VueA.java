@@ -5,10 +5,12 @@
 package Principal;
 
 import static Principal.Schema.connectPostgresql;
+import static com.sun.el.lang.ELArithmetic.add;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -28,25 +30,21 @@ import javax.servlet.http.HttpServletRequest;
  * @author stanislasallouche
  */
 public class VueA extends AppLayout {
-    private Tab CréatEtud;
-    private Tab CreatMod;
+    
     private Connection con;
     private String IDA;
-    private Tab GM;
-    private Tab CreatSem;
     
     private H1 Vue1;
+    
+	
     
     
 
     public VueA() throws ClassNotFoundException, SQLException {
 
-        this.CréatEtud = new Tab("Création d'Étudiant");
-        this.CreatMod = new Tab("Création d'un Module");
+        
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
-        this.CreatSem= new Tab("Création d'un Semestre");
-        this.GM= new Tab("Groupe de Modules");
+                "postgres", "postgres", "passe");
         
         VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
         HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
@@ -57,23 +55,26 @@ public class VueA extends AppLayout {
         
         
         
-        Tabs tab = new Tabs(this.CreatMod, this.CréatEtud, this.CreatSem, this.GM);
+        
         
         
 
        
-        tab.setOrientation(Tabs.Orientation.VERTICAL);
-        tab.setHeight("240px");
-        tab.setWidth("240px");
+        
 
       
-        addToDrawer(createDrawerContent(tab));
+        
         addToNavbar(true, createHeaderContent());
+       
+
+
       
     }
+
     
     
-     private Component createHeaderContent() {
+    
+     private Component createHeaderContent() throws SQLException {
         HorizontalLayout layout = new HorizontalLayout();
 
         layout.setId("header");
@@ -82,8 +83,12 @@ public class VueA extends AppLayout {
         layout.setSpacing(false);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
 
+        HorizontalLayout logoLayout = new HorizontalLayout();
         
-        layout.add(new DrawerToggle());
+        logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        logoLayout.add(new H1("Administrateur/Administratrice: " + Nom(this.IDA, con)));
+        
+        layout.add(logoLayout);
 
         Vue1 = new H1();
         layout.add(Vue1);
@@ -93,26 +98,23 @@ public class VueA extends AppLayout {
         return layout;
     }
     
-    private Component createDrawerContent(Tabs menu) {
-        VerticalLayout layout = new VerticalLayout();
-
-   
-        layout.setSizeFull();
-        layout.setPadding(false);
-        layout.setSpacing(false);
-        layout.getThemeList().set("spacing-s", true);
-        layout.setAlignItems(FlexComponent.Alignment.STRETCH);
-
-        
-        HorizontalLayout logoLayout = new HorizontalLayout();
-        logoLayout.setId("logo");
-        logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        logoLayout.add(new H1("My Project"));
-
-    
-        layout.add(logoLayout, menu);
-        return layout;
-    }
+//    private Component createDrawerContent(Tabs menu) {
+//        VerticalLayout layout = new VerticalLayout();
+//
+//   
+//        layout.setSizeFull();
+//        layout.setPadding(false);
+//        layout.setSpacing(false);
+//        layout.getThemeList().set("spacing-s", true);
+//        layout.setAlignItems(FlexComponent.Alignment.STRETCH);
+//
+//        
+//        
+//
+//    
+//        layout.add( menu);
+//        return layout;
+//    }
     
     
     public String Nom(String ID, Connection con) throws SQLException{
@@ -131,9 +133,6 @@ public class VueA extends AppLayout {
     }
     
      
-        
-        
-    
 
 }
 
