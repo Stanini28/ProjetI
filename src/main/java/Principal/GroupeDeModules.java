@@ -27,7 +27,7 @@ public class GroupeDeModules {
    public static List<String> Nom() {
         return Arrays.stream(GroupeDeModules).map((t) -> {
             return t[1];
-        }).unordered().distinct().toList();
+        }).distinct().toList();
     }
    
     public static void afficheTousLesGroupesDeModules(Connection con) throws SQLException {

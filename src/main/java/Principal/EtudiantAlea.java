@@ -71,30 +71,30 @@ public class EtudiantAlea {
         public static List<String> noms() {
         return Arrays.stream(EtudiantAlea).map((t) -> {
             return t[2];
-        }).unordered().distinct().toList();
+        }).distinct().toList();
     }
 
     public static List<String> prenoms() {
         return Arrays.stream(EtudiantAlea).map((t) -> {
             return t[1];
-        }).unordered().distinct().toList();
+        }).distinct().toList();
     }
     
     public static List<String> specialite() {
         return Arrays.stream(EtudiantAlea).map((t) -> {
             return t[4];
-        }).unordered().distinct().toList();
+        }).distinct().toList();
     }
     
     public static List<String> email() {
         return Arrays.stream(EtudiantAlea).map((t) -> {
             return t[3];
-        }).unordered().distinct().toList();
+        }).distinct().toList();
     }
     public static List<String> date() {
         return Arrays.stream(EtudiantAlea).map((t) -> {
             return t[5];
-        }).unordered().distinct().toList();
+        }).distinct().toList();
     }
     
     public static void afficheTousLesEtudiants(Connection con) throws SQLException {

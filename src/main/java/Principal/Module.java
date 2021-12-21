@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  *
@@ -19,34 +20,40 @@ import java.util.List;
 public class Module {
     
     public static final String[][] Module = new String[][]{
-        {"1", "Espagnol","jsp", "34", "3"},
-        {"2", "Negociate to succeed", "jsp", "27", "3"},
-        {"3", "Allemand 2LF", "jsp", "28", "2"},
-        {"4", "Tutorat", "jsp", "20", "3"},
-        {"5", "Expression théatrale", "jsp", "32", "1"},
-        {"6", "PRAP", "jsp", "35", "2"},
-        {"7", "Histoire du design","jsp", "28","2"},
-        {"8", "Maquette numérique", "jsp", "28", "1"},
-        {"9", "Satellites", "jsp", "28", "2"}
+        {"1", "Espagnol","jsp", "34", "1"},
+        {"2", "Negociate to succeed", "jsp", "27","1"},
+        {"3", "Allemand 2LF", "jsp", "28", "1"},
+        {"4", "Tutorat", "jsp", "20", "2"},
+        {"5", "Expression théatrale", "jsp", "32", "2"},
+        {"6", "PRAP", "jsp", "35", "3"},
+        {"7", "Histoire du design","jsp", "28", "2"},
+        {"8", "Maquette numérique", "jsp", "28", "3"},
+        {"9", "Satellites", "jsp", "28", "3"}
     };
     
     public static List<String> intitule() {
         return Arrays.stream(Module).map((t) -> {
             return t[1];
-        }).unordered().distinct().toList();
+        }).distinct().toList();
     }
     
     public static List<String> description() {
         return Arrays.stream(Module).map((t) -> {
             return t[2];
-        }).unordered().distinct().toList();
+        }).distinct().toList();
     }
     
     public static List<String> nbrplaces() {
         return Arrays.stream(Module).map((t) -> {
             return t[3];
-        }).unordered().distinct().toList();
+        }).distinct().toList();
     }
+    
+    /*public static List<String> idgroupemodule() {
+        return Arrays.stream(Module).map((t) -> {
+            return t[4];
+        }).unordered().distinct().toList();
+    }*/
     
     public static void afficheTousLesModules(Connection con) throws SQLException {
         try(Statement st = con.createStatement()){

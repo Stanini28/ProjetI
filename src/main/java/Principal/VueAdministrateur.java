@@ -39,14 +39,14 @@ public class VueAdministrateur extends Div {
 
     public VueAdministrateur() throws ClassNotFoundException, SQLException {
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "passe");
+                "postgres", "postgres", "pass");
 
         this.VL1 = new VerticalLayout();
 
         this.CréatEtud = new Tab("Création d'Étudiant");
         this.CreatMod = new Tab("Création d'un Module");
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "passe");
+                "postgres", "postgres", "pass");
         this.CreatSem = new Tab("Création d'un Semestre");
         this.GM = new Tab("Groupe de Modules");
 

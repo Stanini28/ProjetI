@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import fr.insa.beuvron.utils.ConsoleFdB;
+import java.util.stream.Stream;
 
 
 /**
@@ -41,10 +42,10 @@ return con;
     public static void main(String[] args) throws ClassNotFoundException, SQLException {    
 try ( Connection con = connectPostgresql("localhost", 5432,
 "postgres", "postgres", "pass")) {
-    //schema(con);
-    //createExemple(con);
+    schema(con);
+    createExemple(con);
     //test1(con);
-    test2(con);
+    //test2(con);
     }
 }
 
@@ -143,7 +144,7 @@ references GroupeDeModules(id)
         //List<String> date = EtudiantAlea.date();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               INSERT INTO Etudiants (nom, prenom, email, specialite)
+               INSERT INTO Etudiants (Nom, Prenom, email, specialite)
                  VALUES (?,?,?,?)
                """)) {
             con.setAutoCommit(false);
@@ -173,7 +174,7 @@ references GroupeDeModules(id)
         return min.plusDays(delta);
      }*/
     public static void createModules(Connection con, int nbr,
-            Random r) throws SQLException {
+                Random r) throws SQLException {
         List<String> intitule = Module.intitule();
         List<String> description = Module.description();
         List<String> nbrplaces = Module.nbrplaces();
@@ -193,10 +194,11 @@ references GroupeDeModules(id)
             con.commit();
         } catch (SQLException ex) {
             con.rollback();
-            System.out.println("ERROR : problem during createEtudiantAlea");
+            System.out.println("ERROR : problem during createModules");
             throw ex;
         }
     }
+
     
     public static void createAdministrateur(Connection con, int nbr,
             Random r) throws SQLException {
@@ -226,7 +228,7 @@ references GroupeDeModules(id)
             con.commit();
         } catch (SQLException ex) {
             con.rollback();
-            System.out.println("ERROR : problem during createEtudiantAlea");
+            System.out.println("ERROR : problem during createAdministrateur");
             throw ex;
         }
     }
@@ -256,13 +258,36 @@ references GroupeDeModules(id)
             throw ex;
         }
     }
+     
+     public static void createGroupeDeModules(Connection con, int nbr,
+            Random r) throws SQLException {
+        List<String> Nom = GroupeDeModules.Nom();
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+               INSERT INTO GroupeDeModules (Nom)
+                 VALUES (?)
+               """)) {
+            con.setAutoCommit(false);
+
+            for (int i = 0; i < nbr; i++) {
+                pst.setString(1, Nom.get(r.nextInt(Nom.size())));
+                pst.executeUpdate();
+            }
+            con.commit();
+        } catch (SQLException ex) {
+            con.rollback();
+            System.out.println("ERROR : problem during createGroupeDeModules");
+            throw ex;
+        }
+    }
          
     public static void createExemple(Connection con) throws SQLException {
-    Random r = new Random(885214156);
+    Random r = new Random(999999999);
     createEtudiantAlea(con, 50, r);
-    createAdministrateur(con, 15,r);
+    createAdministrateur(con, 15, r);
     createModules(con, 9, r);
     createSemestres(con,5);
+    createGroupeDeModules(con, 3,r);
     }  
     
     public static void CreationUnEtudiant (Connection con, String noms, String prenoms, String email, String specialite, String mdp) throws SQLException {
