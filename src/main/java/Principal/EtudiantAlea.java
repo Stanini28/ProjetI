@@ -87,11 +87,8 @@ public class EtudiantAlea {
                String nom = res.getString("nom");
                String email = res.getString("email");
                String specialite = res.getString("specialité");
-               // String date = res.getString("date");
-               // java.sql.Date dn = res.getDate("6");
-               // System.out.println(id+" : "+ nom + " né le "+ dn);
+               String date = res.getString("date de naissance");
            }
        }
-    }  
+    }
 }
-        

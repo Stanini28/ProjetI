@@ -76,9 +76,7 @@ public class Administrateur {
                String nom = res.getString("nom");
                String email = res.getString("email");
                String mdp = res.getString("mot de passe");
-               // String date = res.getString("date");
-               // java.sql.Date dn = res.getDate("6");
-               // System.out.println(id+" : "+ nom + " né le "+ dn);
+               String date = res.getString("date de naissance");
            }
        }
     }
