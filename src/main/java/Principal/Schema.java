@@ -160,11 +160,12 @@ references GroupeDeModules(id)
         List<String> prenoms = EtudiantAlea.prenoms();
         List<String> specialite = EtudiantAlea.specialite();
         List<String> email = EtudiantAlea.email();
+        List<String> mdp = EtudiantAlea.mdp();
         //List<String> date = EtudiantAlea.date();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               INSERT INTO Etudiants (Nom, Prenom, email, specialite)
-                 VALUES (?,?,?,?)
+               INSERT INTO Etudiants (Nom, Prenom, email, specialite, mdp)
+                 VALUES (?,?,?,?,?)
                """)) {
             con.setAutoCommit(false);
 
@@ -173,6 +174,7 @@ references GroupeDeModules(id)
                 pst.setString(2, prenoms.get(r.nextInt(prenoms.size())));
                 pst.setString(4, specialite.get(r.nextInt(specialite.size())));
                 pst.setString(3, email.get(r.nextInt(email.size())));
+                pst.setString(5, mdp.get(r.nextInt(mdp.size())));
                 // pst.setString(3, date.get(r.nextInt(date.size())));
                 // Date asDate = Date.valueOf(dalea);
                 // pst.setDate(3, asDate);
