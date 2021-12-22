@@ -108,4 +108,17 @@ public class Administrateur {
             pst.executeUpdate();
         }
     }*/
+    
+    /*public static void CreationUnSemestre (Connection con, int Année, int Semestre, int NumeroSemestre) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+        """
+        insert into Semestre (Année,Semestre,NumeroSem)
+        values (?,?,?)
+        """)){
+            pst.setInt(1, Année);
+            pst.setInt(2, Semestre);
+            pst.setInt(3,NumeroSemestre);
+            pst.executeUpdate();
+        }
+    }*/ 
 }

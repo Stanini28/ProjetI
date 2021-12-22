@@ -42,10 +42,11 @@ return con;
     public static void main(String[] args) throws ClassNotFoundException, SQLException {    
 try ( Connection con = connectPostgresql("localhost", 5432,
 "postgres", "postgres", "pass")) {
-    schema(con);
-    createExemple(con);
+    //schema(con);
+    //createExemple(con);
     //test1(con);
     //test2(con);
+    test3(con);
     //deleteSchema(con);
     }
 }
@@ -339,6 +340,19 @@ references GroupeDeModules(id)
         }
     }
     
+    public static void CreationUnSemestre (Connection con, int Année, int Semestre, int NumeroSemestre) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+        """
+        insert into Semestre (Année,Semestre,NumeroSem)
+        values (?,?,?)
+        """)){
+            pst.setInt(1, Année);
+            pst.setInt(2, Semestre);
+            pst.setInt(3,NumeroSemestre);
+            pst.executeUpdate();
+        }
+    } 
+    
     public static void test1 (Connection con) throws SQLException{
         String noms = ConsoleFdB.entreeString("nom :");
         String prenoms = ConsoleFdB.entreeString("prenom :");
@@ -353,5 +367,12 @@ references GroupeDeModules(id)
         String description = ConsoleFdB.entreeString("description :");
         String nbrplaces = ConsoleFdB.entreeString("Nombre de places :");
         CreationUnModule(con, intitule, description, nbrplaces);
+    }
+    
+    public static void test3(Connection con) throws SQLException{
+        int Année = ConsoleFdB.entreeInt("Année du sesmetre:");
+        int Semestre = ConsoleFdB.entreeInt("Semestre :");
+        int NumeroSemestre = ConsoleFdB.entreeInt("Numéro du semestre :");
+        CreationUnSemestre(con, Année, Semestre, NumeroSemestre);
     }
 }

@@ -92,6 +92,6 @@ public class EtudiantAlea {
                // System.out.println(id+" : "+ nom + " né le "+ dn);
            }
        }
-    }
+    }  
 }
         
