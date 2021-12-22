@@ -269,8 +269,7 @@ references GroupeDeModules(id)
         }
     }
      
-     public static void createGroupeDeModules(Connection con, int nbr,
-            Random r) throws SQLException {
+     public static void createGroupeDeModules(Connection con, int nbr) throws SQLException {
         List<String> Nom = GroupeDeModules.Nom();
         try (PreparedStatement pst = con.prepareStatement(
                 """
@@ -280,7 +279,7 @@ references GroupeDeModules(id)
             con.setAutoCommit(false);
 
             for (int i = 0; i < nbr; i++) {
-                pst.setString(1, Nom.get(r.nextInt(Nom.size())));
+                pst.setString(1, Nom.get(i));
                 pst.executeUpdate();
             }
             con.commit();
@@ -297,7 +296,7 @@ references GroupeDeModules(id)
     createAdministrateur(con, 15, r);
     createModules(con, 9, r);
     createSemestres(con,5);
-    createGroupeDeModules(con, 3,r);
+    createGroupeDeModules(con, 3);
     }  
     
     public static void CreationUnEtudiant (Connection con, String noms, String prenoms, String email, String specialite, String mdp) throws SQLException {
