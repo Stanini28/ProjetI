@@ -32,25 +32,25 @@ public class VueAdministrateur extends Div {
     private Tab CréatEtud;
     private Tab CreatMod;
     private VerticalLayout VL1;
+    
+    private Tab CreatS;
 
     private Tab GM;
-    private Tab CreatSem;
     private Tabs tabs;
 
     public VueAdministrateur() throws ClassNotFoundException, SQLException {
-        this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
+        
 
         this.VL1 = new VerticalLayout();
 
         this.CréatEtud = new Tab("Création d'Étudiant");
         this.CreatMod = new Tab("Création d'un Module");
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
-        this.CreatSem = new Tab("Création d'un Semestre");
+                "postgres", "postgres", "passe");
         this.GM = new Tab("Groupe de Modules");
+        this.CreatS= new Tab("Création d'un Semestre");
 
-        this.tabs = new Tabs(this.CreatMod, this.CreatSem, this.CréatEtud, this.GM);
+        this.tabs = new Tabs(this.CreatMod, this.CréatEtud, this.GM, this.CreatS);
 
         tabs.addSelectedChangeListener(event
                 -> setContent(event.getSelectedTab())
@@ -85,10 +85,11 @@ public class VueAdministrateur extends Div {
 
         } else if (tab.equals(this.CréatEtud)) {
             content.add(CE(dialog));
-//		} else {
-//			content.add(new Paragraph("This is the Shipping tab"));
-//                        		}
+//		
+        }else if(tab.equals(this.CreatS)){
+            content.add(CS(dialog));
         }
+       
     }
 
     public VerticalLayout CM(Dialog dialog) {
@@ -198,5 +199,57 @@ public class VueAdministrateur extends Div {
             pst.setString(5, mdp);
             pst.executeUpdate();
         }
+    }
+    
+    public static void CreationUnSemestre (Connection con, int Année, int Semestre, int NumeroSemestre) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+        """
+        insert into Semestre (Année,Semestre,NumeroSem)
+        values (?,?,?)
+        """)){
+            pst.setInt(1, Année);
+            pst.setInt(2, Semestre);
+            pst.setInt(3,NumeroSemestre);
+            pst.executeUpdate();
+        }
+    }
+    
+    public VerticalLayout CS(Dialog dialog) {
+        H2 headline = new H2("Création d'un nouveau semestre");
+        headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
+                .set("font-size", "1.5em").set("font-weight", "bold");
+
+        TextField Année = new TextField("Année : ");
+        TextField Semestre = new TextField("Semestre : ");
+        TextField NumSem = new TextField("Numéro du Semestre : ");
+        VerticalLayout fieldLayout = new VerticalLayout(Année,
+                Semestre, NumSem);
+        fieldLayout.setSpacing(false);
+        fieldLayout.setPadding(false);
+        fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
+
+        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        Button saveButton = new Button("Save", e -> {
+            try {
+                CreationUnSemestre(this.con, Integer.parseInt(Année.getValue()), Integer.parseInt(Semestre.getValue()), Integer.parseInt(NumSem.getValue()));
+            } catch (SQLException ex) {
+                Logger.getLogger(VueAdministrateur.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            dialog.close();
+        });
+        saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        HorizontalLayout buttonLayout = new HorizontalLayout(cancelButton,
+                saveButton);
+        buttonLayout
+                .setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+
+        VerticalLayout dialogLayout = new VerticalLayout(headline, fieldLayout,
+                buttonLayout);
+        dialogLayout.setPadding(false);
+        dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
+        dialogLayout.getStyle().set("width", "300px").set("max-width", "100%");
+
+        return dialogLayout;
     }
 }

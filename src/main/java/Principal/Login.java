@@ -38,7 +38,7 @@ public class Login extends Composite<LoginOverlay> {
 
     public Login() throws ClassNotFoundException, SQLException {
         Connection con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
+                "postgres", "postgres", "passe");
         
         
         
@@ -56,7 +56,7 @@ public class Login extends Composite<LoginOverlay> {
                     Notification.show("AHBFDUEIZK");
                     this.IDE= IDe(con, Login, MDP);
                     
-                    UI.getCurrent().navigate(VueEtudiant.class, new RouteParameters("userID",this.IDA));
+                    UI.getCurrent().navigate(VueEtudiant.class, new RouteParameters("userID",this.IDE));
                 }else
                     if(ExistenceA(con, Login, MDP)){
                     this.IDA= IDa(con, Login, MDP);

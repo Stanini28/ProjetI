@@ -5,7 +5,12 @@
 package Principal;
 
 import static Principal.Schema.connectPostgresql;
+import com.vaadin.flow.component.checkbox.CheckboxGroup;
+import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinService;
@@ -21,22 +26,20 @@ import javax.servlet.http.HttpServletRequest;
  * @author stanislasallouche
  */
 @Route(value = "Etudiant/:userID", layout= VueE.class)
-public class VueEtudiant extends HorizontalLayout {
+public class VueEtudiant extends VerticalLayout {
     
     private Connection con;
     private String IDE;
     
+    
     public VueEtudiant() throws ClassNotFoundException, SQLException {
     this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
+                "postgres", "postgres", "passe");
     
     
-    VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
-        HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
-        if (httpServletRequest.getRequestURL().length()==38 ){
-         this.IDE = httpServletRequest.getRequestURL().subSequence(37, 38).toString();}
-        else {
-            this.IDE = httpServletRequest.getRequestURL().subSequence(37, 39).toString();}
+    
+        
+        
     
     }
     
@@ -57,4 +60,6 @@ public class VueEtudiant extends HorizontalLayout {
             
             return P + " " + N;
     }
+    
+    
 }
