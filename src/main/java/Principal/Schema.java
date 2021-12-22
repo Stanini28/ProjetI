@@ -42,11 +42,11 @@ return con;
     public static void main(String[] args) throws ClassNotFoundException, SQLException {    
 try ( Connection con = connectPostgresql("localhost", 5432,
 "postgres", "postgres", "pass")) {
-    //schema(con);
-    //createExemple(con);
+    schema(con);
+    createExemple(con);
     //test1(con);
     //test2(con);
-    test3(con);
+    //test3(con);
     //deleteSchema(con);
     }
 }
@@ -61,7 +61,7 @@ Nom varchar(50) not null,
 Prenom varchar(50) not null,
 email varchar(50) not null,
 specialite varchar(20) not null,
-dateNaissance date,
+dateNaissance varchar(20),
 mdp varchar(50)
 )
 """);
@@ -92,7 +92,7 @@ id integer primary key generated always as identity,
 Nom varchar(50) not null,
 Prenom varchar(50) not null,
 email varchar(50) not null,
-dateNaissance date,
+dateNaissance varchar(20),
 mdp varchar(50)
 )
 """);
@@ -152,7 +152,6 @@ references GroupeDeModules(id)
             System.out.println("ERROR : problem during deleteSchema");
             throw ex;
         }
-
     }
  
     public static void createEtudiantAlea(Connection con, int nbr,
@@ -162,11 +161,11 @@ references GroupeDeModules(id)
         List<String> specialite = EtudiantAlea.specialite();
         List<String> email = EtudiantAlea.email();
         List<String> mdp = EtudiantAlea.mdp();
-        //List<String> date = EtudiantAlea.date();
+        List<String> date = EtudiantAlea.date();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               INSERT INTO Etudiants (Nom, Prenom, email, specialite, mdp)
-                 VALUES (?,?,?,?,?)
+               INSERT INTO Etudiants (Nom, Prenom, email, specialite, mdp, dateNaissance)
+                 VALUES (?,?,?,?,?,?)
                """)) {
             con.setAutoCommit(false);
 
@@ -176,10 +175,7 @@ references GroupeDeModules(id)
                 pst.setString(4, specialite.get(r.nextInt(specialite.size())));
                 pst.setString(3, email.get(r.nextInt(email.size())));
                 pst.setString(5, mdp.get(r.nextInt(mdp.size())));
-                // pst.setString(3, date.get(r.nextInt(date.size())));
-                // Date asDate = Date.valueOf(dalea);
-                // pst.setDate(3, asDate);
-                // LocalDate minNaissance, LocalDate maxNaissance
+                pst.setString(6, date.get(r.nextInt(date.size())));
                 pst.executeUpdate();
             }
             con.commit();
@@ -189,12 +185,7 @@ references GroupeDeModules(id)
             throw ex;
         }
     }
-    /*public static LocalDate dateAleaBetween(LocalDate min, LocalDate max, Random r) {
-        long minDay = min.toEpochDay();
-        long maxDay = max.toEpochDay();
-        long delta = (long) (r.nextDouble() * (maxDay - minDay + 1));
-        return min.plusDays(delta);
-     }*/
+    
     public static void createModules(Connection con, int nbr,
                 Random r) throws SQLException {
         List<String> intitule = Module.intitule();
@@ -228,11 +219,11 @@ references GroupeDeModules(id)
         List<String> prenoms = Administrateur.prenoms();
         List<String> mdp = Administrateur.mdp();
         List<String> email = Administrateur.email();
-        //List<String> date = Administrateur.date();
+        List<String> date = Administrateur.date();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               INSERT INTO Administrateur (nom, prenom, email, mdp)
-                 VALUES (?,?,?,?)
+               INSERT INTO Administrateur (nom, prenom, email, mdp, dateNaissance)
+                 VALUES (?,?,?,?,?)
                """)) {
             con.setAutoCommit(false);
 
@@ -241,10 +232,7 @@ references GroupeDeModules(id)
                 pst.setString(2, prenoms.get(r.nextInt(prenoms.size())));
                 pst.setString(4, mdp.get(r.nextInt(mdp.size())));
                 pst.setString(3, email.get(r.nextInt(email.size())));
-                // pst.setString(3, date.get(r.nextInt(date.size())));
-                // Date asDate = Date.valueOf(dalea);
-                // pst.setDate(3, asDate);
-                // LocalDate minNaissance, LocalDate maxNaissance
+                pst.setString(5, date.get(r.nextInt(date.size())));
                 pst.executeUpdate();
             }
             con.commit();
