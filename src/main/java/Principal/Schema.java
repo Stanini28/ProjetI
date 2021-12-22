@@ -46,6 +46,7 @@ try ( Connection con = connectPostgresql("localhost", 5432,
     createExemple(con);
     //test1(con);
     //test2(con);
+    //deleteSchema(con);
     }
 }
 
@@ -135,6 +136,24 @@ references GroupeDeModules(id)
 }
 
 }
+ 
+ 
+   public static void deleteSchema(Connection con) throws SQLException {
+        try (Statement st = con.createStatement()) {
+   st.executeUpdate(
+   """
+   DROP SCHEMA public CASCADE;
+   CREATE SCHEMA public;
+   """
+   );    
+        } catch (SQLException ex) {
+            con.rollback();
+            System.out.println("ERROR : problem during deleteSchema");
+            throw ex;
+        }
+
+    }
+ 
     public static void createEtudiantAlea(Connection con, int nbr,
             Random r) throws SQLException {
         List<String> noms = EtudiantAlea.noms();
