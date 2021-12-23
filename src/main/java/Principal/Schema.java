@@ -296,7 +296,7 @@ references GroupeDeModules(id)
     createAdministrateur(con, 15, r);
     createModules(con, 9, r);
     createSemestres(con,5);
-    createGroupeDeModules(con, 3);
+    createGroupeDeModules(con,3);
     }  
     
     public static void CreationUnEtudiant (Connection con, String noms, String prenoms, String email, String specialite, String mdp) throws SQLException {
