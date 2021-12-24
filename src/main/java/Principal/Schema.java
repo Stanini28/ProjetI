@@ -6,17 +6,13 @@
 package Principal;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import fr.insa.beuvron.utils.ConsoleFdB;
-import java.util.stream.Stream;
 
 
 /**
@@ -42,9 +38,9 @@ return con;
     public static void main(String[] args) throws ClassNotFoundException, SQLException {    
 try ( Connection con = connectPostgresql("localhost", 5432,
 "postgres", "postgres", "pass")) {
-    schema(con);
-    createExemple(con);
-    //test1(con);
+    //schema(con);
+    //createExemple(con);
+    test1(con);
     //test2(con);
     //test3(con);
     //deleteSchema(con);
@@ -155,12 +151,12 @@ references GroupeDeModules(id)
     }
  
     public static void createEtudiantAlea(Connection con) throws SQLException {
-        List<String> noms = EtudiantAlea.noms();
-        List<String> prenoms = EtudiantAlea.prenoms();
+        List<String> Nom = EtudiantAlea.Nom();
+        List<String> Prenom = EtudiantAlea.Prenom();
         List<String> specialite = EtudiantAlea.specialite();
         List<String> email = EtudiantAlea.email();
         List<String> mdp = EtudiantAlea.mdp();
-        List<String> date = EtudiantAlea.date();
+        List<String> dateNaissance = EtudiantAlea.dateNaissance();
         try (PreparedStatement pst = con.prepareStatement(
                 """
                INSERT INTO Etudiants (Nom, Prenom, email, specialite, mdp, dateNaissance)
@@ -168,13 +164,13 @@ references GroupeDeModules(id)
                """)) {
             con.setAutoCommit(false);
 
-            for (int i = 0; i < noms.size(); i++) {
-                pst.setString(1, noms.get(i));
-                pst.setString(2, prenoms.get(i));
+            for (int i = 0; i < Nom.size(); i++) {
+                pst.setString(1, Nom.get(i));
+                pst.setString(2, Prenom.get(i));
                 pst.setString(4, specialite.get(i));
                 pst.setString(3, email.get(i));
                 pst.setString(5, mdp.get(i));
-                pst.setString(6, date.get(i));
+                pst.setString(6, dateNaissance.get(i));
                 pst.executeUpdate();
             }
             con.commit();
@@ -189,7 +185,7 @@ references GroupeDeModules(id)
         List<String> intitule = Module.intitule();
         List<String> description = Module.description();
         List<String> nbrplaces = Module.nbrplaces();
-        List<String> idgroupemodule = Module.idgroupemodule();
+        List<String> idgroupemodules = Module.idgroupemodules();
         try (PreparedStatement pst = con.prepareStatement(
                 """
                INSERT INTO Modules (intitule, description, nbrplaces,idgroupesmodules)
@@ -200,12 +196,12 @@ references GroupeDeModules(id)
            int desc=0;
            int nbrp=0;
            int idGM=0;
-            while((inti<intitule.size())&&(desc<description.size())&&(nbrp<nbrplaces.size())&&(idGM<idgroupemodule.size())){
+            while((inti<intitule.size())&&(desc<description.size())&&(nbrp<nbrplaces.size())&&(idGM<idgroupemodules.size())){
                 
                 pst.setString(1, intitule.get(inti));
                 pst.setString(2, description.get(desc));
                 pst.setString(3, nbrplaces.get(nbrp));
-                pst.setInt(4,Integer.valueOf(idgroupemodule.get(idGM)));
+                pst.setInt(4,Integer.valueOf(idgroupemodules.get(idGM)));
                 pst.executeUpdate();
                 inti=inti+1;
                 desc=desc+1;
@@ -222,11 +218,11 @@ references GroupeDeModules(id)
 
     
     public static void createAdministrateur(Connection con) throws SQLException {
-        List<String> noms = Administrateur.noms();
-        List<String> prenoms = Administrateur.prenoms();
+        List<String> nom = Administrateur.nom();
+        List<String> prenom = Administrateur.prenom();
         List<String> mdp = Administrateur.mdp();
         List<String> email = Administrateur.email();
-        List<String> date = Administrateur.date();
+        List<String> dateNaissance = Administrateur.dateNaissance();
         try (PreparedStatement pst = con.prepareStatement(
                 """
                INSERT INTO Administrateur (nom, prenom, email, mdp, dateNaissance)
@@ -234,12 +230,12 @@ references GroupeDeModules(id)
                """)) {
             con.setAutoCommit(false);
 
-            for (int i = 0; i < noms.size(); i++) {
-                pst.setString(1, noms.get(i));
-                pst.setString(2, prenoms.get(i));
+            for (int i = 0; i < nom.size(); i++) {
+                pst.setString(1, nom.get(i));
+                pst.setString(2, prenom.get(i));
                 pst.setString(4, mdp.get(i));
                 pst.setString(3, email.get(i));
-                pst.setString(5, date.get(i));
+                pst.setString(5, dateNaissance.get(i));
                 pst.executeUpdate();
             }
             con.commit();
@@ -306,35 +302,37 @@ references GroupeDeModules(id)
     createSemestres(con,5);
     }  
     
-    public static void CreationUnEtudiant (Connection con, String noms, String prenoms, String email, String specialite, String mdp) throws SQLException {
+    public static void CreationUnEtudiant (Connection con, String nom, String prenom, String email, String specialite, String mdp, String dateNaissance) throws SQLException {
         try (PreparedStatement pst = con.prepareStatement(
         """
-        insert into Etudiants (nom, prenom, email, specialite, mdp)
-        values (?,?,?,?,?)
+        insert into Etudiants (nom, prenom, email, specialite, mdp, dateNaissance)
+        values (?,?,?,?,?, ?)
         """)){
-            pst.setString(1, noms);
-            pst.setString(2, prenoms);
+            pst.setString(1, nom);
+            pst.setString(2, prenom);
             pst.setString(3, email);
             pst.setString(4, specialite);
             pst.setString(5, mdp);
+            pst.setString(6, dateNaissance);
             pst.executeUpdate();
         }
     }
     
-    public static void CreationUnModule (Connection con, String intitule, String description, String nbrplaces) throws SQLException {
+    public static void CreationUnModule (Connection con, String intitule, String description, String nbrplaces, int idGroupesModules) throws SQLException {
         try (PreparedStatement pst = con.prepareStatement(
         """
-        insert into Modules (intitule, description, nbrplaces)
-        values (?,?,?)
+        insert into Modules (intitule, description, nbrplaces, idGroupesModules)
+        values (?,?,?, ?)
         """)){
             pst.setString(1, intitule);
             pst.setString(2, description);
             pst.setString(3, nbrplaces);
+            pst.setInt(4, idGroupesModules);
             pst.executeUpdate();
         }
     }
     
-    public static void CreationUnSemestre (Connection con, int Année, int Semestre, int NumeroSemestre) throws SQLException {
+    public static void CreationUnSemestre (Connection con, int Année, int Semestre, int NumeroSem) throws SQLException {
         try (PreparedStatement pst = con.prepareStatement(
         """
         insert into Semestre (Année,Semestre,NumeroSem)
@@ -342,31 +340,34 @@ references GroupeDeModules(id)
         """)){
             pst.setInt(1, Année);
             pst.setInt(2, Semestre);
-            pst.setInt(3,NumeroSemestre);
+            pst.setInt(3,NumeroSem);
             pst.executeUpdate();
         }
     } 
     
     public static void test1 (Connection con) throws SQLException{
-        String noms = ConsoleFdB.entreeString("nom :");
-        String prenoms = ConsoleFdB.entreeString("prenom :");
+        String nom = ConsoleFdB.entreeString("nom :");
+        String prenom = ConsoleFdB.entreeString("prenom :");
         String email = ConsoleFdB.entreeString("email :");
         String specialite = ConsoleFdB.entreeString("specialite :");
         String mdp = ConsoleFdB.entreeString("mdp :");
-        CreationUnEtudiant(con, noms, prenoms, email, specialite, mdp);
+        String dateNaissance = ConsoleFdB.entreeString("dateNaissance :");
+        CreationUnEtudiant(con, nom, prenom, email, specialite, mdp, dateNaissance);
     }
     
     public static void test2(Connection con) throws SQLException{
         String intitule = ConsoleFdB.entreeString("intitule du module:");
         String description = ConsoleFdB.entreeString("description :");
         String nbrplaces = ConsoleFdB.entreeString("Nombre de places :");
-        CreationUnModule(con, intitule, description, nbrplaces);
-    }
+        int idGroupesModules = ConsoleFdB.entreeInt("Entrez un idGroupesModules compris entre 1 et 3 :");
+        CreationUnModule(con, intitule, description, nbrplaces, idGroupesModules);
+}
+
     
     public static void test3(Connection con) throws SQLException{
         int Année = ConsoleFdB.entreeInt("Année du sesmetre:");
         int Semestre = ConsoleFdB.entreeInt("Semestre :");
-        int NumeroSemestre = ConsoleFdB.entreeInt("Numéro du semestre :");
-        CreationUnSemestre(con, Année, Semestre, NumeroSemestre);
+        int NumeroSem = ConsoleFdB.entreeInt("Numéro du semestre :");
+        CreationUnSemestre(con, Année, Semestre, NumeroSem);
     }
 }

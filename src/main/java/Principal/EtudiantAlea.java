@@ -44,13 +44,13 @@ public class EtudiantAlea {
         {"25", "Rim", "El haouari", "rim.el_haouari@insa-strasbourg.fr", "MIQ5", "4/3/1999", "rim1999"},
     };
     
-        public static List<String> noms() {
+        public static List<String> Nom() {
         return Arrays.stream(EtudiantAlea).map((t) -> {
             return t[2];
         })/*.distinct()*/.toList();
     }
 
-    public static List<String> prenoms() {
+    public static List<String> Prenom() {
         return Arrays.stream(EtudiantAlea).map((t) -> {
             return t[1];
         })/*.distinct()*/.toList();
@@ -67,7 +67,7 @@ public class EtudiantAlea {
             return t[3];
         }).distinct().toList();
     }
-    public static List<String> date() {
+    public static List<String> dateNaissance() {
         return Arrays.stream(EtudiantAlea).map((t) -> {
             return t[5];
         })/*.distinct()*/.toList();
@@ -83,11 +83,11 @@ public class EtudiantAlea {
            ResultSet res = st.executeQuery("select * from Etudiants");
            while (res.next()){
                int id  = res.getInt("id");
-               String prenom = res.getString("prenom");
-               String nom = res.getString("nom");
+               String Prenom = res.getString("prenom");
+               String Nom = res.getString("nom");
                String email = res.getString("email");
                String specialite = res.getString("specialité");
-               String date = res.getString("date de naissance");
+               String dateNaissance = res.getString("date de naissance");
            }
        }
     }

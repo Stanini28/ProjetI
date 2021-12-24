@@ -52,7 +52,7 @@ public class Module {
         })/*.distinct()*/.toList();
     }
     
-    public static List<String> idgroupemodule() {
+    public static List<String> idgroupemodules() {
         return Arrays.stream(Module).map((t) -> {
             return t[4];
         })/*.unordered().distinct()*/.toList();
@@ -66,10 +66,7 @@ public class Module {
                String nomModules = res.getString("Noms des modules");
                String description = res.getString("description");
                String nbrPlace = res.getString("nbrPlace");
-               String idgroupemodule = res.getString("idgroupemodule");
-               // String date = res.getString("date");
-               // java.sql.Date dn = res.getDate("6");
-               // System.out.println(id+" : "+ nom + " né le "+ dn);
+               String idgroupemodules = res.getString("idgroupemodule");
            }
        }
     }

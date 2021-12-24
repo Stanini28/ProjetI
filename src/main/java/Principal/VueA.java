@@ -44,7 +44,7 @@ public class VueA extends AppLayout {
 
         
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "passe");
+                "postgres", "postgres", "pass");
         
         VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
         HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();

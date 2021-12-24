@@ -39,13 +39,13 @@ public class Administrateur {
         
     };
     
-    public static List<String> noms() {
+    public static List<String> nom() {
         return Arrays.stream(Administrateur).map((t) -> {
             return t[2];
         })/*.distinct()*/.toList();
     }
 
-    public static List<String> prenoms() {
+    public static List<String> prenom() {
         return Arrays.stream(Administrateur).map((t) -> {
             return t[1];
         })/*.distinct()*/.toList();
@@ -56,7 +56,7 @@ public class Administrateur {
             return t[3];
         }).distinct().toList();
     }
-    public static List<String> date() {
+    public static List<String> dateNaissance() {
         return Arrays.stream(Administrateur).map((t) -> {
             return t[4];
         })/*.distinct()*/.toList();
