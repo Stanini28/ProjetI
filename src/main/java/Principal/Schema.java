@@ -154,8 +154,7 @@ references GroupeDeModules(id)
         }
     }
  
-    public static void createEtudiantAlea(Connection con, int nbr,
-            Random r) throws SQLException {
+    public static void createEtudiantAlea(Connection con) throws SQLException {
         List<String> noms = EtudiantAlea.noms();
         List<String> prenoms = EtudiantAlea.prenoms();
         List<String> specialite = EtudiantAlea.specialite();
@@ -169,13 +168,13 @@ references GroupeDeModules(id)
                """)) {
             con.setAutoCommit(false);
 
-            for (int i = 0; i < nbr; i++) {
-                pst.setString(1, noms.get(r.nextInt(noms.size())));
-                pst.setString(2, prenoms.get(r.nextInt(prenoms.size())));
-                pst.setString(4, specialite.get(r.nextInt(specialite.size())));
-                pst.setString(3, email.get(r.nextInt(email.size())));
-                pst.setString(5, mdp.get(r.nextInt(mdp.size())));
-                pst.setString(6, date.get(r.nextInt(date.size())));
+            for (int i = 0; i < noms.size(); i++) {
+                pst.setString(1, noms.get(i));
+                pst.setString(2, prenoms.get(i));
+                pst.setString(4, specialite.get(i));
+                pst.setString(3, email.get(i));
+                pst.setString(5, mdp.get(i));
+                pst.setString(6, date.get(i));
                 pst.executeUpdate();
             }
             con.commit();
@@ -186,8 +185,7 @@ references GroupeDeModules(id)
         }
     }
     
-    public static void createModules(Connection con, int nbr,
-                Random r) throws SQLException {
+    public static void createModules(Connection con) throws SQLException {
         List<String> intitule = Module.intitule();
         List<String> description = Module.description();
         List<String> nbrplaces = Module.nbrplaces();
@@ -223,8 +221,7 @@ references GroupeDeModules(id)
     }
 
     
-    public static void createAdministrateur(Connection con, int nbr,
-            Random r) throws SQLException {
+    public static void createAdministrateur(Connection con) throws SQLException {
         List<String> noms = Administrateur.noms();
         List<String> prenoms = Administrateur.prenoms();
         List<String> mdp = Administrateur.mdp();
@@ -237,12 +234,12 @@ references GroupeDeModules(id)
                """)) {
             con.setAutoCommit(false);
 
-            for (int i = 0; i < nbr; i++) {
-                pst.setString(1, noms.get(r.nextInt(noms.size())));
-                pst.setString(2, prenoms.get(r.nextInt(prenoms.size())));
-                pst.setString(4, mdp.get(r.nextInt(mdp.size())));
-                pst.setString(3, email.get(r.nextInt(email.size())));
-                pst.setString(5, date.get(r.nextInt(date.size())));
+            for (int i = 0; i < noms.size(); i++) {
+                pst.setString(1, noms.get(i));
+                pst.setString(2, prenoms.get(i));
+                pst.setString(4, mdp.get(i));
+                pst.setString(3, email.get(i));
+                pst.setString(5, date.get(i));
                 pst.executeUpdate();
             }
             con.commit();
@@ -302,10 +299,10 @@ references GroupeDeModules(id)
          
     public static void createExemple(Connection con) throws SQLException {
     Random r = new Random(999999999);
-    createEtudiantAlea(con, 50, r);
-    createAdministrateur(con, 15, r);
+    createEtudiantAlea(con);
+    createAdministrateur(con);
     createGroupeDeModules(con, 3);
-    createModules(con, 15, r);
+    createModules(con);
     createSemestres(con,5);
     }  
     

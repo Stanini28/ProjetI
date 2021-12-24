@@ -47,19 +47,19 @@ public class EtudiantAlea {
         public static List<String> noms() {
         return Arrays.stream(EtudiantAlea).map((t) -> {
             return t[2];
-        }).distinct().toList();
+        })/*.distinct()*/.toList();
     }
 
     public static List<String> prenoms() {
         return Arrays.stream(EtudiantAlea).map((t) -> {
             return t[1];
-        }).distinct().toList();
+        })/*.distinct()*/.toList();
     }
     
     public static List<String> specialite() {
         return Arrays.stream(EtudiantAlea).map((t) -> {
             return t[4];
-        }).distinct().toList();
+        })/*.distinct()*/.toList();
     }
     
     public static List<String> email() {
@@ -70,12 +70,12 @@ public class EtudiantAlea {
     public static List<String> date() {
         return Arrays.stream(EtudiantAlea).map((t) -> {
             return t[5];
-        }).distinct().toList();
+        })/*.distinct()*/.toList();
     }
     public static List<String> mdp() {
         return Arrays.stream(EtudiantAlea).map((t) -> {
             return t[6];
-        }).distinct().toList();
+        })/*.distinct()*/.toList();
     }
     
     public static void afficheTousLesEtudiants(Connection con) throws SQLException {
