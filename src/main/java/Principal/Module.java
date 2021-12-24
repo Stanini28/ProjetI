@@ -19,40 +19,44 @@ import java.util.List;
 public class Module {
     
     public static final String[][] Module = new String[][]{
-        {"1", "Espagnol","jsp", "34", "1"},
-        {"2", "Negociate to succeed", "jsp", "27","1"},
-        {"3", "Allemand 2LF", "jsp", "28", "1"},
-        {"4", "Tutorat", "jsp", "20", "2"},
+        {"1", "Espagnol","Esp", "34", "1"},
+        {"2", "Negociate to succeed", "NTS", "27","1"},
+        {"3", "Allemand 2LF", "A2LF", "28", "1"},
+        {"4", "Tutorat", "TUT", "20", "2"},
         {"5", "Expression théatrale", "jsp", "32", "2"},
-        {"6", "PRAP", "jsp", "35", "3"},
-        {"7", "Histoire du design","jsp", "28", "2"},
-        {"8", "Maquette numérique", "jsp", "28", "3"},
-        {"9", "Satellites", "jsp", "28", "3"}
+        {"6", "PRAP", "PRA", "35", "3"},
+        {"7", "Histoire du design","HDD", "28", "2"},
+        {"8", "Maquette numérique", "MQN", "28", "3"},
+        {"9", "Satellites", "STL", "28", "3"},
+        {"10", "Init Plasturgie", "IPL", "33", "3"},
+        {"11", "Python", "PYT", "40", "3"},
+        {"12", "Portugais", "POR", "33", "1"},
+        {"13", "Expression Ecrite", "EEC", "16", "2"},
     };
     
     public static List<String> intitule() {
         return Arrays.stream(Module).map((t) -> {
             return t[1];
-        }).distinct().toList();
+        })/*.distinct()*/.toList();
     }
     
     public static List<String> description() {
         return Arrays.stream(Module).map((t) -> {
             return t[2];
-        }).distinct().toList();
+        })/*.distinct()*/.toList();
     }
     
     public static List<String> nbrplaces() {
         return Arrays.stream(Module).map((t) -> {
             return t[3];
-        }).distinct().toList();
+        })/*.distinct()*/.toList();
     }
     
-    /*public static List<String> idgroupemodule() {
+    public static List<String> idgroupemodule() {
         return Arrays.stream(Module).map((t) -> {
             return t[4];
-        }).unordered().distinct().toList();
-    }*/
+        })/*.unordered().distinct()*/.toList();
+    }
     
     public static void afficheTousLesModules(Connection con) throws SQLException {
         try(Statement st = con.createStatement()){

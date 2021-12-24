@@ -191,18 +191,28 @@ references GroupeDeModules(id)
         List<String> intitule = Module.intitule();
         List<String> description = Module.description();
         List<String> nbrplaces = Module.nbrplaces();
+        /*List<String> idgroupemodule = Module.idgroupemodule();*/
         try (PreparedStatement pst = con.prepareStatement(
                 """
                INSERT INTO Modules (intitule, description, nbrplaces)
                  VALUES (?, ?, ?)
                """)) {
             con.setAutoCommit(false);
-
-            for (int i = 0; i < nbr; i++) {
-                pst.setString(1, intitule.get(r.nextInt(intitule.size())));
-                pst.setString(2, description.get(r.nextInt(description.size())));
-                pst.setString(3, nbrplaces.get(r.nextInt(nbrplaces.size())));
+           int inti=0;
+           int desc=0;
+           int nbrp=0;
+          /* int idGM=0;*/
+            while((inti<intitule.size())&&(desc<description.size())&&(nbrp<nbrplaces.size())/*&&(idGM<idgroupemodule.size())*/){
+                
+                pst.setString(1, intitule.get(inti));
+                pst.setString(2, description.get(desc));
+                pst.setString(3, nbrplaces.get(nbrp));
+               /* pst.setInt(4,Integer.valueOf(idgroupemodule.get(idGM)));*/
                 pst.executeUpdate();
+                inti=inti+1;
+                desc=desc+1;
+                nbrp=nbrp+1;
+                /*idGM=idGM+1;*/
             }
             con.commit();
         } catch (SQLException ex) {
@@ -294,9 +304,9 @@ references GroupeDeModules(id)
     Random r = new Random(999999999);
     createEtudiantAlea(con, 50, r);
     createAdministrateur(con, 15, r);
-    createModules(con, 9, r);
+    createGroupeDeModules(con, 3);
+    createModules(con, 15, r);
     createSemestres(con,5);
-    createGroupeDeModules(con,3);
     }  
     
     public static void CreationUnEtudiant (Connection con, String noms, String prenoms, String email, String specialite, String mdp) throws SQLException {
