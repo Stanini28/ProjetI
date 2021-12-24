@@ -38,9 +38,9 @@ return con;
     public static void main(String[] args) throws ClassNotFoundException, SQLException {    
 try ( Connection con = connectPostgresql("localhost", 5432,
 "postgres", "postgres", "pass")) {
-    //schema(con);
-    //createExemple(con);
-    test1(con);
+    schema(con);
+    createExemple(con);
+    //test1(con);
     //test2(con);
     //test3(con);
     //deleteSchema(con);
@@ -129,6 +129,15 @@ add column idGroupesModules integer,
 add constraint FKGroupesModules
 foreign key (idGroupesModules)
 references GroupeDeModules(id)
+""");
+
+st.executeUpdate(
+"""
+alter table GroupeDeModules
+add column idSemestre integer,
+add constraint FKSemetre
+foreign key (idSemestre)
+references Semestre(id)
 """);
 }
 
@@ -272,18 +281,25 @@ references GroupeDeModules(id)
         }
     }
      
-     public static void createGroupeDeModules(Connection con, int nbr) throws SQLException {
+    public static void createGroupeDeModules(Connection con, int nbr) throws SQLException {
         List<String> Nom = GroupeDeModules.Nom();
+        List<String> nbretudiants = GroupeDeModules.nbretudiants();
+        List<String> idSemestre = GroupeDeModules.idSemestre();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               INSERT INTO GroupeDeModules (Nom)
-                 VALUES (?)
+               INSERT INTO GroupeDeModules (Nom, nbretudiants, idSemestre)
+                 VALUES (?, ?, ?)
                """)) {
             con.setAutoCommit(false);
-
+            //int N = 0;
+            //int idS = 0;
             for (int i = 0; i < nbr; i++) {
                 pst.setString(1, Nom.get(i));
+                pst.setInt(2,Integer.valueOf(nbretudiants.get(i)));
+                pst.setInt(3,Integer.valueOf(idSemestre.get(i)));
                 pst.executeUpdate();
+                //N = N+1;
+                //idS = idS+1;
             }
             con.commit();
         } catch (SQLException ex) {
@@ -297,9 +313,9 @@ references GroupeDeModules(id)
     Random r = new Random(999999999);
     createEtudiantAlea(con);
     createAdministrateur(con);
-    createGroupeDeModules(con, 3);
-    createModules(con);
     createSemestres(con,5);
+    createGroupeDeModules(con, 6);
+    createModules(con);
     }  
     
     public static void CreationUnEtudiant (Connection con, String nom, String prenom, String email, String specialite, String mdp, String dateNaissance) throws SQLException {
