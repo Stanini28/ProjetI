@@ -189,28 +189,28 @@ references GroupeDeModules(id)
         List<String> intitule = Module.intitule();
         List<String> description = Module.description();
         List<String> nbrplaces = Module.nbrplaces();
-        /*List<String> idgroupemodule = Module.idgroupemodule();*/
+        List<String> idgroupemodule = Module.idgroupemodule();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               INSERT INTO Modules (intitule, description, nbrplaces)
-                 VALUES (?, ?, ?)
+               INSERT INTO Modules (intitule, description, nbrplaces,idgroupesmodules)
+                 VALUES (?, ?, ?,?)
                """)) {
             con.setAutoCommit(false);
            int inti=0;
            int desc=0;
            int nbrp=0;
-          /* int idGM=0;*/
-            while((inti<intitule.size())&&(desc<description.size())&&(nbrp<nbrplaces.size())/*&&(idGM<idgroupemodule.size())*/){
+           int idGM=0;
+            while((inti<intitule.size())&&(desc<description.size())&&(nbrp<nbrplaces.size())&&(idGM<idgroupemodule.size())){
                 
                 pst.setString(1, intitule.get(inti));
                 pst.setString(2, description.get(desc));
                 pst.setString(3, nbrplaces.get(nbrp));
-               /* pst.setInt(4,Integer.valueOf(idgroupemodule.get(idGM)));*/
+                pst.setInt(4,Integer.valueOf(idgroupemodule.get(idGM)));
                 pst.executeUpdate();
                 inti=inti+1;
                 desc=desc+1;
                 nbrp=nbrp+1;
-                /*idGM=idGM+1;*/
+                idGM=idGM+1;
             }
             con.commit();
         } catch (SQLException ex) {
