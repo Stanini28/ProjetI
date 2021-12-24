@@ -6,8 +6,10 @@ package Principal;
 
 import static Principal.Schema.connectPostgresql;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
@@ -21,6 +23,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,8 +40,7 @@ public class VueEtudiant extends Div {
     private Tab Module;
     private Tabs tabs;
     private Tab Choix;
-    private Tab GroupeM;
-    
+
     private String Semestre;
 
     private VerticalLayout VL1;
@@ -50,15 +53,12 @@ public class VueEtudiant extends Div {
                 "postgres", "postgres", "passe");
         this.VL1 = new VerticalLayout();
         this.Module = new Tab("Description des Modules");
-        this.GroupeM = new Tab("Description des Groupes de Modules");
         this.Choix = new Tab("Voeux pour les Modules");
-        this.Sem= new Tab("Semestre");
+        this.Sem = new Tab("Semestre");
         this.Choix.setVisible(false);
         this.Module.setVisible(false);
-        this.GroupeM.setVisible(false);
-        
-        
-        this.tabs = new Tabs(this.Sem, this.Module, this.Choix, this.GroupeM );
+
+        this.tabs = new Tabs(this.Sem, this.Module, this.Choix);
 
         add(tabs);
 
@@ -85,10 +85,7 @@ public class VueEtudiant extends Div {
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         tabs.setHeight("240px");
         tabs.setWidth("240px");
-        
-        
-        
-        
+
     }
 
     public void setContent(Tab tab) throws SQLException {
@@ -96,16 +93,15 @@ public class VueEtudiant extends Div {
         Dialog dialog = new Dialog();
         dialog.getElement().setAttribute("aria-label", "Create new employee");
         if (tab.equals(this.Choix)) {
-//            content.add(CM(dialog));
+            content.add(Voeux2(dialog));
 
         } else if (tab.equals(this.Module)) {
             content.add(AffichageInfo(dialog));
 //		
-        } else if (tab.equals(this.GroupeM)) {
-//            content.add(CS(dialog));
-        }else if(tab.equals(this.Sem)){
+
+        } else if (tab.equals(this.Sem)) {
             content.add(test());
-            
+
         }
     }
 
@@ -123,165 +119,268 @@ public class VueEtudiant extends Div {
 
         return P + " " + N;
     }
-    
-    public VerticalLayout AffichageInfo(Dialog dialog) throws SQLException{
-        VerticalLayout Vl= new VerticalLayout();
-       
-        try(Statement st = con.createStatement()){
-           ResultSet res = st.executeQuery("select * from Modules");
-           while (res.next()){
-              
-               String nomModules = res.getString("Intitule");
-               String description = res.getString("description");
-               String nbrPlace = res.getString("nbrPlaces");
-               String idgroupemodule = res.getString("idgroupesmodules");
-               Button H = new Button(nomModules);
-                Vl.add(H);
-               H.addClickListener(event ->{
-                   Notification L = Notification.show("Description: " + description);
+
+    public HorizontalLayout AffichageInfo(Dialog dialog) throws SQLException {
+        VerticalLayout Vl1 = new VerticalLayout();
+        VerticalLayout Vl2 = new VerticalLayout();
+        VerticalLayout Vl3 = new VerticalLayout();
+
+        Vl1.setSizeFull();
+
+        HorizontalLayout Vl = new HorizontalLayout();
+        try ( Statement st = con.createStatement()) {
+            ResultSet res = st.executeQuery("select * from Modules");
+            while (res.next()) {
+
+                String nomModules = res.getString("Intitule");
+                String description = res.getString("description");
+                String nbrPlace = res.getString("nbrPlaces");
+                String idgroupemodule = res.getString("idgroupesmodules");
+
+                Button H = new Button(nomModules);
+                if (Integer.parseInt(idgroupemodule) == 1) {
+                    Vl1.add(H);
+                    H.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+                } else if (Integer.parseInt(idgroupemodule) == 2) {
+                    Vl2.add(H);
+                    H.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+                } else if (Integer.parseInt(idgroupemodule) == 3) {
+                    Vl3.add(H);
+                    H.addThemeVariants(ButtonVariant.LUMO_ERROR);
+                }
+
+                H.addClickListener(event -> {
+                    Notification L = Notification.show("Description: " + description);
                     Notification M = Notification.show("Nombre de places disponibles:" + nbrPlace);
-                    Notification N = Notification.show("Id du Groupe de Module : "+ idgroupemodule);
+                    Notification N = Notification.show("Id du Groupe de Module : " + idgroupemodule);
                     N.setPosition(Notification.Position.MIDDLE);
                     M.setPosition(Notification.Position.MIDDLE);
-                   L.setPosition(Notification.Position.MIDDLE);
-                  
-               });
-              
-               
-               
-           }
-           
+                    L.setPosition(Notification.Position.MIDDLE);
+
+                });
+            }
+            Vl.add(Vl1, Vl2, Vl3);
         }
-        
+
         Vl.setPadding(false);
         return Vl;
     }
 
-        public CheckboxGroup test(){
-            CheckboxGroup<String> checkboxGroup = new CheckboxGroup<>();
+    public CheckboxGroup test() {
+        CheckboxGroup<String> checkboxGroup = new CheckboxGroup<>();
         checkboxGroup.setLabel("Quel est votre Semestre?");
-        checkboxGroup.setItems("S1", "S2", "S3", "S4","S5", "S6", "S7", "S8","S9","S10");
+        checkboxGroup.setItems("S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10");
         checkboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
         checkboxGroup.setSizeFull();
-        
-       checkboxGroup.addSelectionListener(event ->{
-            if (checkboxGroup.isSelected("S1")){
+
+        checkboxGroup.addSelectionListener(event -> {
+            if (checkboxGroup.isSelected("S1")) {
                 checkboxGroup.setVisible(false);
                 this.Sem.setVisible(false);
-                this.Semestre="S1";
+                this.Semestre = "S1";
                 this.Choix.setVisible(true);
-        this.Module.setVisible(true);
-        this.GroupeM.setVisible(true);
+                this.Module.setVisible(true);
             }
-            if (checkboxGroup.isSelected("S2")==true){
+            if (checkboxGroup.isSelected("S2") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre="S2";
-                this.Sem.setVisible(false);
-                this.Choix.setVisible(true);
-        this.Module.setVisible(true);
-        this.GroupeM.setVisible(true);
-            }
-            if (checkboxGroup.isSelected("S3")==true){
-                checkboxGroup.setVisible(false);
-                this.Semestre="S3";
+                this.Semestre = "S2";
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
-        this.Module.setVisible(true);
-        this.GroupeM.setVisible(true);
+                this.Module.setVisible(true);
             }
-            if (checkboxGroup.isSelected("S4")==true){
+            if (checkboxGroup.isSelected("S3") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre="S4";
+                this.Semestre = "S3";
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
-        this.Module.setVisible(true);
-        this.GroupeM.setVisible(true);
+                this.Module.setVisible(true);
             }
-            if (checkboxGroup.isSelected("S5")==true){
+            if (checkboxGroup.isSelected("S4") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre="S5";
+                this.Semestre = "S4";
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
-        this.Module.setVisible(true);
-        this.GroupeM.setVisible(true);
+                this.Module.setVisible(true);
             }
-            if (checkboxGroup.isSelected("S6")==true){
+            if (checkboxGroup.isSelected("S5") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre="S6";
-                this.Sem.setVisible(false);
-               this.Choix.setVisible(true);
-        this.Module.setVisible(true);
-        this.GroupeM.setVisible(true);
-            }
-            if (checkboxGroup.isSelected("S7")==true){
-                checkboxGroup.setVisible(false);
-                this.Semestre="S7";
+                this.Semestre = "S5";
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
-        this.Module.setVisible(true);
-        this.GroupeM.setVisible(true);
+                this.Module.setVisible(true);
             }
-            if (checkboxGroup.isSelected("S8")==true){
+            if (checkboxGroup.isSelected("S6") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre="S8";
+                this.Semestre = "S6";
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
-        this.Module.setVisible(true);
-        this.GroupeM.setVisible(true);
+                this.Module.setVisible(true);
             }
-            if (checkboxGroup.isSelected("S9")==true){
+            if (checkboxGroup.isSelected("S7") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre="S9";
+                this.Semestre = "S7";
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
-        this.Module.setVisible(true);
-        this.GroupeM.setVisible(true);
+                this.Module.setVisible(true);
             }
-            if (checkboxGroup.isSelected("S10")==true){
+            if (checkboxGroup.isSelected("S8") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre="S10";
+                this.Semestre = "S8";
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
-        this.Module.setVisible(true);
-        this.GroupeM.setVisible(true);
+                this.Module.setVisible(true);
             }
-            
+            if (checkboxGroup.isSelected("S9") == true) {
+                checkboxGroup.setVisible(false);
+                this.Semestre = "S9";
+                this.Sem.setVisible(false);
+                this.Choix.setVisible(true);
+                this.Module.setVisible(true);
+            }
+            if (checkboxGroup.isSelected("S10") == true) {
+                checkboxGroup.setVisible(false);
+                this.Semestre = "S10";
+                this.Sem.setVisible(false);
+                this.Choix.setVisible(true);
+                this.Module.setVisible(true);
+            }
+
         });
-       
-       return checkboxGroup;
-        }
-        
-        public VerticalLayout AffichageGM(Dialog dialog) throws SQLException{
-        VerticalLayout Vl= new VerticalLayout();
-        
-        try(Statement st = con.createStatement()){
-           ResultSet res = st.executeQuery("select * from Modules");
-           while (res.next()){
-               HorizontalLayout HL= new HorizontalLayout();
-               
-               String nomModules = res.getString("Intitule");
-               String description = res.getString("description");
-               String nbrPlace = res.getString("nbrPlaces");
-               String idgroupemodule = res.getString("idgroupesmodules");
-               Button H = new Button(nomModules);
-               
-               H.addClickListener(event ->{
-                   Notification L = Notification.show("Description: " + description);
+
+        return checkboxGroup;
+    }
+
+    public VerticalLayout AffichageGM(Dialog dialog) throws SQLException {
+        VerticalLayout Vl = new VerticalLayout();
+
+        try ( Statement st = con.createStatement()) {
+            ResultSet res = st.executeQuery("select * from Modules");
+            while (res.next()) {
+                HorizontalLayout HL = new HorizontalLayout();
+
+                String nomModules = res.getString("Intitule");
+                String description = res.getString("description");
+                String nbrPlace = res.getString("nbrPlaces");
+                String idgroupemodule = res.getString("idgroupesmodules");
+                Button H = new Button(nomModules);
+
+                H.addClickListener(event -> {
+                    Notification L = Notification.show("Description: " + description);
                     Notification M = Notification.show("Nombre de places disponibles:" + nbrPlace);
-                    Notification N = Notification.show("Id du Groupe de Module : "+ idgroupemodule);
+                    Notification N = Notification.show("Id du Groupe de Module : " + idgroupemodule);
                     N.setPosition(Notification.Position.MIDDLE);
                     M.setPosition(Notification.Position.MIDDLE);
-                   L.setPosition(Notification.Position.MIDDLE);
-                   
-               });
-               HL.add(H);
-               Vl.add(HL);
-               
-           }
-           
+                    L.setPosition(Notification.Position.MIDDLE);
+
+                });
+                HL.add(H);
+                Vl.add(HL);
+
+            }
+
         }
-        
+
         Vl.setPadding(false);
         return Vl;
     }
+
+    public VerticalLayout Voeux2(Dialog dialog) throws SQLException {
+
+        
+        
+        ComboBox<String> comboBox1 = new ComboBox<>("Voeux 2 pour le module du Groupe 1");
+        ComboBox<String> comboBox2 = new ComboBox<>("Voeux 2 pour le module du Groupe 2");
+        ComboBox<String> comboBox3 = new ComboBox<>("Voeux 2 pour le module du Groupe 3");
+        
+        List<String> L1 = new ArrayList<>();
+        List<String> L2 = new ArrayList<>();
+        List<String> L3 = new ArrayList<>();
+        
+
+        HorizontalLayout Vl = new HorizontalLayout();
+        HorizontalLayout VL = new HorizontalLayout();
+        
+        VerticalLayout VLT = new VerticalLayout();
+        
+        VL.add(Voeux1(dialog));
+       
+        try ( Statement st = con.createStatement()) {
+            ResultSet res = st.executeQuery("select * from Modules");
+
+            while (res.next()) {
+
+                String nomModules = res.getString("Intitule");
+                String idgroupemodule = res.getString("idgroupesmodules");
+
+                if (Integer.parseInt(idgroupemodule) == 1) {
+                    L1.add(nomModules);
+
+                } else if (Integer.parseInt(idgroupemodule) == 2) {
+                    L2.add(nomModules);
+
+                } else if (Integer.parseInt(idgroupemodule) == 3) {
+                    L3.add(nomModules);
+                }
+                
+                comboBox1.setItems(L1);
+                comboBox2.setItems(L2);
+                comboBox3.setItems(L3);
+            }
+            
+            Vl.add(comboBox1, comboBox2, comboBox3);
+        }
+        
+        VLT.add(VL, Vl);
+
+        Vl.setPadding(false);
+        return VLT;
+    }
+    
+    public HorizontalLayout Voeux1(Dialog dialog) throws SQLException {
+
+        ComboBox<String> comboBox1 = new ComboBox<>("Voeux 1 pour le module du Groupe 1");
+        ComboBox<String> comboBox2 = new ComboBox<>("Voeux 1 pour le module du Groupe 2");
+        ComboBox<String> comboBox3 = new ComboBox<>("Voeux 1 pour le module du Groupe 3");
+        
+        List<String> L1 = new ArrayList<>();
+        List<String> L2 = new ArrayList<>();
+        List<String> L3 = new ArrayList<>();
+        
+
+        HorizontalLayout Vl = new HorizontalLayout();
+       
+        try ( Statement st = con.createStatement()) {
+            ResultSet res = st.executeQuery("select * from Modules");
+
+            while (res.next()) {
+
+                String nomModules = res.getString("Intitule");
+                String idgroupemodule = res.getString("idgroupesmodules");
+
+                if (Integer.parseInt(idgroupemodule) == 1) {
+                    L1.add(nomModules);
+
+                } else if (Integer.parseInt(idgroupemodule) == 2) {
+                    L2.add(nomModules);
+
+                } else if (Integer.parseInt(idgroupemodule) == 3) {
+                    L3.add(nomModules);
+                }
+                
+                comboBox1.setItems(L1);
+                comboBox2.setItems(L2);
+                comboBox3.setItems(L3);
+            }
+            
+            Vl.add(comboBox1, comboBox2, comboBox3);
+        }
+        
+        Button Save = new Button("Sauvegarder ces choix!");
+        Vl.add(Save);
+        Vl.setPadding(false);
+        Vl.setAlignItems(FlexComponent.Alignment.END);
+        
+        return Vl;
+    }
+    
 }
