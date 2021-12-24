@@ -3,6 +3,7 @@ package Principal;
 import static Principal.Schema.connectPostgresql;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Route;
@@ -11,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -97,8 +97,10 @@ public class VueAdministrateur extends Div {
         TextField Intitule = new TextField("Nom du Module : ");
         TextField Desc = new TextField("Description du Module : ");
         TextField NBR = new TextField("Nombre de Places disponibles: ");
+        TextField IDGM= new TextField("ID du groupe de modules associé: ");
+        
         VerticalLayout fieldLayout = new VerticalLayout(Intitule,
-                Desc, NBR);
+                Desc, NBR,IDGM);
         fieldLayout.setSpacing(false);
         fieldLayout.setPadding(false);
         fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
@@ -106,7 +108,7 @@ public class VueAdministrateur extends Div {
         Button cancelButton = new Button("Cancel", e -> dialog.close());
         Button saveButton = new Button("Save", e -> {
             try {
-                CreationUnModule(this.con, Intitule.getValue(), Desc.getValue(), NBR.getValue());
+                CreationUnModule(this.con, Intitule.getValue(), Desc.getValue(), NBR.getValue(), Integer.parseInt(IDGM.getValue()));
             } catch (SQLException ex) {
                 Logger.getLogger(VueAdministrateur.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -128,15 +130,16 @@ public class VueAdministrateur extends Div {
         return dialogLayout;
     }
 
-    public static void CreationUnModule(Connection con, String intitule, String description, String nbrplaces) throws SQLException {
-        try ( PreparedStatement pst = con.prepareStatement(
-                """
-        insert into Modules (intitule, description, nbrplaces)
-        values (?,?,?)
-        """)) {
+    public static void CreationUnModule (Connection con, String intitule, String description, String nbrplaces, int idGroupesModules) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+        """
+        insert into Modules (intitule, description, nbrplaces, idGroupesModules)
+        values (?,?,?, ?)
+        """)){
             pst.setString(1, intitule);
             pst.setString(2, description);
             pst.setString(3, nbrplaces);
+            pst.setInt(4, idGroupesModules);
             pst.executeUpdate();
         }
     }
@@ -151,8 +154,10 @@ public class VueAdministrateur extends Div {
         TextField Email = new TextField("Email : ");
         TextField Spe = new TextField("Spécialité : ");
         TextField MDP = new TextField("Mot de Passe : ");
+        TextField datePicker = new TextField("Date de Naissance (JJ/MM/AAAA): ");
+        
         VerticalLayout fieldLayout = new VerticalLayout(Nom,
-                Prenom, Spe, Email, MDP);
+                Prenom, Spe, Email, MDP, datePicker);
         fieldLayout.setSpacing(false);
         fieldLayout.setPadding(false);
         fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
@@ -161,7 +166,7 @@ public class VueAdministrateur extends Div {
         Button saveButton = new Button("Save", e -> {
             try {
                 CreationUnEtudiant(this.con, Nom.getValue(), Prenom.getValue(), Email.getValue(), Spe.getValue(),
-                        MDP.getValue());
+                        MDP.getValue(), datePicker.getValue());
             } catch (SQLException ex) {
                 Logger.getLogger(VueAdministrateur.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -183,17 +188,18 @@ public class VueAdministrateur extends Div {
         return dialogLayout;
     }
 
-    public static void CreationUnEtudiant(Connection con, String noms, String prenoms, String email, String specialite, String mdp) throws SQLException {
-        try ( PreparedStatement pst = con.prepareStatement(
-                """
-        insert into Etudiants (nom, prenom, email, specialite, mdp)
-        values (?,?,?,?,?)
-        """)) {
-            pst.setString(1, noms);
-            pst.setString(2, prenoms);
+    public static void CreationUnEtudiant (Connection con, String nom, String prenom, String email, String specialite, String mdp, String dateNaissance) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+        """
+        insert into Etudiants (nom, prenom, email, specialite, mdp, dateNaissance)
+        values (?,?,?,?,?, ?)
+        """)){
+            pst.setString(1, nom);
+            pst.setString(2, prenom);
             pst.setString(3, email);
             pst.setString(4, specialite);
             pst.setString(5, mdp);
+            pst.setString(6, dateNaissance);
             pst.executeUpdate();
         }
     }
