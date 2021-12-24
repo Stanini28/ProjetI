@@ -38,12 +38,13 @@ return con;
     public static void main(String[] args) throws ClassNotFoundException, SQLException {    
 try ( Connection con = connectPostgresql("localhost", 5432,
 "postgres", "postgres", "pass")) {
-    schema(con);
-    createExemple(con);
+    //schema(con);
+    //createExemple(con);
     //test1(con);
     //test2(con);
     //test3(con);
     //deleteSchema(con);
+    ModuleSemestre(con);
     }
 }
 
@@ -385,5 +386,25 @@ references Semestre(id)
         int Semestre = ConsoleFdB.entreeInt("Semestre :");
         int NumeroSem = ConsoleFdB.entreeInt("Numéro du semestre :");
         CreationUnSemestre(con, Année, Semestre, NumeroSem);
+    }
+    
+    public static void ModuleSemestre (Connection con) throws SQLException {
+        List<String> Nom = GroupeDeModules.Nom();
+        List<String> nbretudiants = GroupeDeModules.nbretudiants();
+        int semestre = ConsoleFdB.entreeInt("Quel est votre semestre ?");
+        // si c'est l'id (= c'est le 1 du S1) du semestre 1 alors on affiche les caractéristiques des groupes de modules du S1
+        if (semestre == 1){
+            for (int i = 0; i < 3; i++){
+            System.out.println(Nom.get(i));
+            System.out.println(nbretudiants.get(i));
+            }
+        }
+        // si c'est l'id du semestre 2 alors on affiche les caractéristiques des groupes de modules du S2
+        else if (semestre == 2){
+            for (int i = 3; i < 6; i++){
+            System.out.println(Nom.get(i));
+            System.out.println(nbretudiants.get(i));
+            }
+        }
     }
 }
