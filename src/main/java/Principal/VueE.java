@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 public class VueE extends AppLayout {
     private Connection con;
     private String IDA;
-    private String Semestre;
     
     private H1 Vue1;
     
@@ -53,56 +52,7 @@ public class VueE extends AppLayout {
         
         addToNavbar(true, createHeaderContent());
         
-        CheckboxGroup<String> checkboxGroup = new CheckboxGroup<>();
-        checkboxGroup.setLabel("Quel est votre Semestre?");
-        checkboxGroup.setItems("S1", "S2", "S3", "S4","S5", "S6", "S7", "S8","S9","S10");
-        checkboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
-        checkboxGroup.setSizeFull();
-        this.addToDrawer(checkboxGroup);
         
-       checkboxGroup.addSelectionListener(event ->{
-            if (checkboxGroup.isSelected("S1")){
-                checkboxGroup.setVisible(false);
-                this.Semestre="S1";
-            }
-            if (checkboxGroup.isSelected("S2")==true){
-                checkboxGroup.setVisible(false);
-                this.Semestre="S2";
-            }
-            if (checkboxGroup.isSelected("S3")==true){
-                checkboxGroup.setVisible(false);
-                this.Semestre="S3";
-            }
-            if (checkboxGroup.isSelected("S4")==true){
-                checkboxGroup.setVisible(false);
-                this.Semestre="S4";
-            }
-            if (checkboxGroup.isSelected("S5")==true){
-                checkboxGroup.setVisible(false);
-                this.Semestre="S5";
-            }
-            if (checkboxGroup.isSelected("S6")==true){
-                checkboxGroup.setVisible(false);
-                this.Semestre="S6";
-            }
-            if (checkboxGroup.isSelected("S7")==true){
-                checkboxGroup.setVisible(false);
-                this.Semestre="S7";
-            }
-            if (checkboxGroup.isSelected("S8")==true){
-                checkboxGroup.setVisible(false);
-                this.Semestre="S8";
-            }
-            if (checkboxGroup.isSelected("S9")==true){
-                checkboxGroup.setVisible(false);
-                this.Semestre="S9";
-            }
-            if (checkboxGroup.isSelected("S10")==true){
-                checkboxGroup.setVisible(false);
-                this.Semestre="S10";
-            }
-            
-        });
     }
 
     

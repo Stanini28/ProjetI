@@ -77,9 +77,6 @@ public class VueAdministrateur extends Div {
         Dialog dialog = new Dialog();
         dialog.getElement().setAttribute("aria-label", "Create new employee");
 
-        VerticalLayout dialogLayout = CM(dialog);
-        dialog.add(dialogLayout);
-
         if (tab.equals(this.CreatMod)) {
             content.add(CM(dialog));
 
