@@ -38,13 +38,13 @@ return con;
     public static void main(String[] args) throws ClassNotFoundException, SQLException {    
 try ( Connection con = connectPostgresql("localhost", 5432,
 "postgres", "postgres", "pass")) {
-    //schema(con);
-    //createExemple(con);
+    schema(con);
+    createExemple(con);
     //test1(con);
     //test2(con);
     //test3(con);
     //deleteSchema(con);
-    ModuleSemestre(con);
+    //ModuleSemestre(con);
     }
 }
 
@@ -202,21 +202,21 @@ references Semestre(id)
                  VALUES (?, ?, ?,?)
                """)) {
             con.setAutoCommit(false);
-           int inti=0;
-           int desc=0;
-           int nbrp=0;
-           int idGM=0;
-            while((inti<intitule.size())&&(desc<description.size())&&(nbrp<nbrplaces.size())&&(idGM<idgroupemodules.size())){
-                
-                pst.setString(1, intitule.get(inti));
-                pst.setString(2, description.get(desc));
-                pst.setString(3, nbrplaces.get(nbrp));
-                pst.setInt(4,Integer.valueOf(idgroupemodules.get(idGM)));
+           //int inti=0;
+           //int desc=0;
+           //int nbrp=0;
+           //int idGM=0;
+           //while((inti<intitule.size())&&(desc<description.size())&&(nbrp<nbrplaces.size())&&(idGM<idgroupemodules.size())){
+            for (int i = 0; i < intitule.size(); i++) {    
+                pst.setString(1, intitule.get(i));
+                pst.setString(2, description.get(i));
+                pst.setString(3, nbrplaces.get(i));
+                pst.setInt(4,Integer.valueOf(idgroupemodules.get(i)));
                 pst.executeUpdate();
-                inti=inti+1;
-                desc=desc+1;
-                nbrp=nbrp+1;
-                idGM=idGM+1;
+                //inti=inti+1;
+                //desc=desc+1;
+                //nbrp=nbrp+1;
+                //idGM=idGM+1;
             }
             con.commit();
         } catch (SQLException ex) {
@@ -282,7 +282,7 @@ references Semestre(id)
         }
     }
      
-    public static void createGroupeDeModules(Connection con, int nbr) throws SQLException {
+    public static void createGroupeDeModules(Connection con) throws SQLException {
         List<String> Nom = GroupeDeModules.Nom();
         List<String> nbretudiants = GroupeDeModules.nbretudiants();
         List<String> idSemestre = GroupeDeModules.idSemestre();
@@ -294,7 +294,7 @@ references Semestre(id)
             con.setAutoCommit(false);
             //int N = 0;
             //int idS = 0;
-            for (int i = 0; i < nbr; i++) {
+            for (int i = 0; i < Nom.size(); i++) {
                 pst.setString(1, Nom.get(i));
                 pst.setInt(2,Integer.valueOf(nbretudiants.get(i)));
                 pst.setInt(3,Integer.valueOf(idSemestre.get(i)));
@@ -315,7 +315,7 @@ references Semestre(id)
     createEtudiantAlea(con);
     createAdministrateur(con);
     createSemestres(con,5);
-    createGroupeDeModules(con, 6);
+    createGroupeDeModules(con);
     createModules(con);
     }  
     

@@ -17,7 +17,7 @@ public class EtudiantAlea {
     
     public static final String[][] EtudiantAlea = new String[][]{
         
-        {"1", "Will", "Myers", "Will.myers@insa-strasbourg.fr", "GE2", "5/7/2002", "coucou"},
+        {"1", "Will", "Byers", "Will.byers@insa-strasbourg.fr", "GE2", "5/7/2002", "coucou"},
         {"2", "David", "Dortmund", "David.dortmund@insa-strasbourg.fr","STH", "11/1/2003", "boujour"},
         {"3", "Aurore", "Benjamin", "Aurore.benjamin@insa-strasbourg.fr","STH ", "10/8/2003", "12345"},
         {"4", "Dominic", "Rochefort", "Dominic.rochefort@insa-strasbourg.fr","GM3" ,"7/8/2001", "987654"},

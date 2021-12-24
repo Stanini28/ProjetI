@@ -20,16 +20,16 @@ public class Module {
     
     public static final String[][] Module = new String[][]{
         {"1", "Espagnol","Esp", "34", "1"},
-        {"2", "Negociate to succeed", "NTS", "27","1"},
+        {"2", "Negociate to succeed", "NTS", "27","6"},
         {"3", "Allemand 2LF", "A2LF", "28", "1"},
-        {"4", "Tutorat", "TUT", "20", "2"},
+        {"4", "Tutorat", "TUT", "20", "5"},
         {"5", "Expression théatrale", "jsp", "32", "2"},
         {"6", "PRAP", "PRA", "35", "3"},
-        {"7", "Histoire du design","HDD", "28", "2"},
-        {"8", "Maquette numérique", "MQN", "28", "3"},
-        {"9", "Satellites", "STL", "28", "3"},
+        {"7", "Histoire du design","HDD", "28", "5"},
+        {"8", "Maquette numérique", "MQN", "28", "6"},
+        {"9", "Satellites", "STL", "28", "4"},
         {"10", "Init Plasturgie", "IPL", "33", "3"},
-        {"11", "Python", "PYT", "40", "3"},
+        {"11", "Python", "PYT", "40", "4"},
         {"12", "Portugais", "POR", "33", "1"},
         {"13", "Expression Ecrite", "EEC", "16", "2"},
     };
