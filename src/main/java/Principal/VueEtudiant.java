@@ -41,7 +41,7 @@ public class VueEtudiant extends Div {
     private Tabs tabs;
     private Tab Choix;
 
-    private String Semestre;
+    private int Semestre;
 
     private VerticalLayout VL1;
 
@@ -50,7 +50,7 @@ public class VueEtudiant extends Div {
 
     public VueEtudiant() throws ClassNotFoundException, SQLException {
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
+                "postgres", "postgres", "passe");
         this.VL1 = new VerticalLayout();
         this.Module = new Tab("Description des Modules");
         this.Choix = new Tab("Voeux pour les Modules");
@@ -129,7 +129,8 @@ public class VueEtudiant extends Div {
 
         HorizontalLayout Vl = new HorizontalLayout();
         try ( Statement st = con.createStatement()) {
-            ResultSet res = st.executeQuery("select * from Modules");
+            ResultSet res = st.executeQuery("select * from Modules JOIN groupedeModules ON Modules.idgroupesmodules="
+                    + "groupedemodules.id where groupedemodules.idsemestre=" + this.Semestre );
             while (res.next()) {
 
                 String nomModules = res.getString("Intitule");
@@ -138,13 +139,13 @@ public class VueEtudiant extends Div {
                 String idgroupemodule = res.getString("idgroupesmodules");
 
                 Button H = new Button(nomModules);
-                if (Integer.parseInt(idgroupemodule) == 1) {
+                if (Math.floorMod(Integer.parseInt(idgroupemodule),3) == 1 ) {
                     Vl1.add(H);
                     H.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-                } else if (Integer.parseInt(idgroupemodule) == 2) {
+                } else if (Math.floorMod(Integer.parseInt(idgroupemodule),3 ) == 2) {
                     Vl2.add(H);
                     H.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-                } else if (Integer.parseInt(idgroupemodule) == 3) {
+                } else if (Math.floorMod(Integer.parseInt(idgroupemodule), 3 ) == 0) {
                     Vl3.add(H);
                     H.addThemeVariants(ButtonVariant.LUMO_ERROR);
                 }
@@ -177,69 +178,70 @@ public class VueEtudiant extends Div {
             if (checkboxGroup.isSelected("S1")) {
                 checkboxGroup.setVisible(false);
                 this.Sem.setVisible(false);
-                this.Semestre = "S1";
+                this.Semestre = 1;
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
             }
             if (checkboxGroup.isSelected("S2") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre = "S2";
+                this.Semestre = 2;
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
             }
             if (checkboxGroup.isSelected("S3") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre = "S3";
+                this.Semestre = 3;
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
+                
             }
             if (checkboxGroup.isSelected("S4") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre = "S4";
+                this.Semestre = 4;
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
             }
             if (checkboxGroup.isSelected("S5") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre = "S5";
+                this.Semestre = 5;
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
             }
             if (checkboxGroup.isSelected("S6") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre = "S6";
+                this.Semestre = 6;
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
             }
             if (checkboxGroup.isSelected("S7") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre = "S7";
+                this.Semestre = 7;
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
             }
             if (checkboxGroup.isSelected("S8") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre = "S8";
+                this.Semestre = 8;
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
             }
             if (checkboxGroup.isSelected("S9") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre = "S9";
+                this.Semestre = 9;
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
             }
             if (checkboxGroup.isSelected("S10") == true) {
                 checkboxGroup.setVisible(false);
-                this.Semestre = "S10";
+                this.Semestre = 10;
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
@@ -250,60 +252,59 @@ public class VueEtudiant extends Div {
         return checkboxGroup;
     }
 
-    public VerticalLayout AffichageGM(Dialog dialog) throws SQLException {
-        VerticalLayout Vl = new VerticalLayout();
-
-        try ( Statement st = con.createStatement()) {
-            ResultSet res = st.executeQuery("select * from Modules");
-            while (res.next()) {
-                HorizontalLayout HL = new HorizontalLayout();
-
-                String nomModules = res.getString("Intitule");
-                String description = res.getString("description");
-                String nbrPlace = res.getString("nbrPlaces");
-                String idgroupemodule = res.getString("idgroupesmodules");
-                Button H = new Button(nomModules);
-
-                H.addClickListener(event -> {
-                    Notification L = Notification.show("Description: " + description);
-                    Notification M = Notification.show("Nombre de places disponibles:" + nbrPlace);
-                    Notification N = Notification.show("Id du Groupe de Module : " + idgroupemodule);
-                    N.setPosition(Notification.Position.MIDDLE);
-                    M.setPosition(Notification.Position.MIDDLE);
-                    L.setPosition(Notification.Position.MIDDLE);
-
-                });
-                HL.add(H);
-                Vl.add(HL);
-
-            }
-
-        }
-
-        Vl.setPadding(false);
-        return Vl;
-    }
+//    public VerticalLayout AffichageGM(Dialog dialog) throws SQLException {
+//        VerticalLayout Vl = new VerticalLayout();
+//
+//        try ( Statement st = con.createStatement()) {
+//            ResultSet res = st.executeQuery("select * from Modules JOIN groupedeModules ON Modules.idgroupesmodules="
+//                    + "groupedemodules.id where groupedemodules.idsemestre=" + this.Semestre );
+//            while (res.next()) {
+//                HorizontalLayout HL = new HorizontalLayout();
+//
+//                String nomModules = res.getString("Intitule");
+//                String description = res.getString("description");
+//                String nbrPlace = res.getString("nbrPlaces");
+//                String idgroupemodule = res.getString("idgroupesmodules");
+//
+//                
+//                Button H = new Button(nomModules);
+//
+//                H.addClickListener(event -> {
+//                    Notification L = Notification.show("Description: " + description);
+//                    Notification M = Notification.show("Nombre de places disponibles:" + nbrPlace);
+//                    Notification N = Notification.show("Id du Groupe de Module : " + idgroupemodule);
+//                    N.setPosition(Notification.Position.MIDDLE);
+//                    M.setPosition(Notification.Position.MIDDLE);
+//                    L.setPosition(Notification.Position.MIDDLE);
+//
+//                });
+//                HL.add(H);
+//                Vl.add(HL);
+//            }
+//
+//        }
+//
+//        Vl.setPadding(false);
+//        return Vl;
+//    }
 
     public VerticalLayout Voeux2(Dialog dialog) throws SQLException {
 
-        
-        
         ComboBox<String> comboBox1 = new ComboBox<>("Voeux 2 pour le module du Groupe 1");
         ComboBox<String> comboBox2 = new ComboBox<>("Voeux 2 pour le module du Groupe 2");
         ComboBox<String> comboBox3 = new ComboBox<>("Voeux 2 pour le module du Groupe 3");
-        
+
         List<String> L1 = new ArrayList<>();
         List<String> L2 = new ArrayList<>();
         List<String> L3 = new ArrayList<>();
-        
 
         HorizontalLayout Vl = new HorizontalLayout();
         HorizontalLayout VL = new HorizontalLayout();
-        
+
         VerticalLayout VLT = new VerticalLayout();
-        
+
         VL.add(Voeux1(dialog));
-       
+
         try ( Statement st = con.createStatement()) {
             ResultSet res = st.executeQuery("select * from Modules");
 
@@ -321,34 +322,33 @@ public class VueEtudiant extends Div {
                 } else if (Integer.parseInt(idgroupemodule) == 3) {
                     L3.add(nomModules);
                 }
-                
+
                 comboBox1.setItems(L1);
                 comboBox2.setItems(L2);
                 comboBox3.setItems(L3);
             }
-            
+
             Vl.add(comboBox1, comboBox2, comboBox3);
         }
-        
+
         VLT.add(VL, Vl);
 
         Vl.setPadding(false);
         return VLT;
     }
-    
+
     public HorizontalLayout Voeux1(Dialog dialog) throws SQLException {
 
         ComboBox<String> comboBox1 = new ComboBox<>("Voeux 1 pour le module du Groupe 1");
         ComboBox<String> comboBox2 = new ComboBox<>("Voeux 1 pour le module du Groupe 2");
         ComboBox<String> comboBox3 = new ComboBox<>("Voeux 1 pour le module du Groupe 3");
-        
+
         List<String> L1 = new ArrayList<>();
         List<String> L2 = new ArrayList<>();
         List<String> L3 = new ArrayList<>();
-        
 
         HorizontalLayout Vl = new HorizontalLayout();
-       
+
         try ( Statement st = con.createStatement()) {
             ResultSet res = st.executeQuery("select * from Modules");
 
@@ -366,21 +366,21 @@ public class VueEtudiant extends Div {
                 } else if (Integer.parseInt(idgroupemodule) == 3) {
                     L3.add(nomModules);
                 }
-                
+
                 comboBox1.setItems(L1);
                 comboBox2.setItems(L2);
                 comboBox3.setItems(L3);
             }
-            
+
             Vl.add(comboBox1, comboBox2, comboBox3);
         }
-        
+
         Button Save = new Button("Sauvegarder ces choix!");
         Vl.add(Save);
         Vl.setPadding(false);
         Vl.setAlignItems(FlexComponent.Alignment.END);
-        
+
         return Vl;
     }
-    
+
 }
