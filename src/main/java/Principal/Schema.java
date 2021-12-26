@@ -363,6 +363,38 @@ references Modules(id)
             throw ex;
         }
     }
+    
+    public static void createInscription(Connection con) throws SQLException {
+        List<String> idetudiants = inscription.idEtudiant();
+        List<String> idModuleGM1 = inscription.idModuleGM1();
+        List<String> idModuleGM2 = inscription.idModuleGM2();
+        List<String> idModuleGM3 = inscription.idModuleGM3();
+        List<String> idSemestre = inscription.idSemestre();
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+               INSERT INTO Inscription (idetudiant, idmodulegm1,idmodulegm2,idmodulegm3, idSemestre)
+                 VALUES (?,?,?,?,?)
+               """)) {
+            con.setAutoCommit(false);
+           int idM1=0;
+           int idM2=0;
+           int idM3=0;
+            for (int i = 0; i < idetudiants.size(); i++) {
+                
+                pst.setInt(1, Integer.valueOf(idetudiants.get(i)));
+                pst.setInt(2,Integer.valueOf(idModuleGM1.get(i)));
+                pst.setInt(3,Integer.valueOf(idModuleGM2.get(i)));
+                pst.setInt(4,Integer.valueOf(idModuleGM3.get(i)));
+                pst.setInt(5,Integer.valueOf(idSemestre.get(i)));
+                pst.executeUpdate();
+            }
+            con.commit();
+        } catch (SQLException ex) {
+            con.rollback();
+            System.out.println("ERROR : problem during createInscription");
+            throw ex;
+        }
+    }
          
     public static void createExemple(Connection con) throws SQLException {
     Random r = new Random(999999999);
@@ -371,6 +403,7 @@ references Modules(id)
     createSemestres(con,5);
     createGroupeDeModules(con);
     createModules(con);
+    createInscription(con);
     }  
     
     public static void CreationUnEtudiant (Connection con, String nom, String prenom, String email, String specialite, String mdp, String dateNaissance) throws SQLException {
