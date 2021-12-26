@@ -106,7 +106,7 @@ NumeroSem integer
 
 st.executeUpdate(
 """
-create table Inscription(
+create table Voeux(
 id integer primary key generated always as identity,
 idEtudiant integer,
 idVoeu1GM1 integer,
