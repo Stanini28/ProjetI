@@ -104,6 +104,28 @@ NumeroSem integer
 )
 """);
 
+st.executeUpdate(
+"""
+create table Inscription(
+id integer primary key generated always as identity,
+idEtudiant integer,
+idVoeu1GM1 integer,
+idVoeu2GM1 integer,
+idVoeu1GM2 integer,
+idVoeu2GM2 integer,
+idVoeu1GM3 integer,
+idVoeu2GM3 integer,
+idSemestre integer,
+
+constraint FK0 foreign key (idEtudiant) references Etudiants(id),
+constraint FK1 foreign key (idVoeu1GM1) references Modules(id),
+constraint FK2 foreign key (idVoeu2GM1) references Modules(id),
+constraint FK3 foreign key (idVoeu1GM2) references Modules(id),
+constraint FK4 foreign key (idVoeu2GM2) references Modules(id),
+constraint FK5 foreign key (idVoeu1GM3) references Modules(id),
+constraint FK6 foreign key (idVoeu2GM3) references Modules(id)
+)
+""");
 /*
 //Début partie relationnel
 st.executeUpdate(
@@ -140,6 +162,20 @@ add constraint FKSemetre
 foreign key (idSemestre)
 references Semestre(id)
 """);
+/*
+st.executeUpdate(
+"""
+alter table Inscription
+
+add constraint FK1
+foreign key (idVoeu1GM1)
+references Modules(id)
+
+add constraint FK2
+foreign key (idVoeu2GM1)
+references Modules(id)
+""");
+*/
 }
 
 }
