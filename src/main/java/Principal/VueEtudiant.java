@@ -40,6 +40,7 @@ public class VueEtudiant extends Div {
     private Tab Module;
     private Tabs tabs;
     private Tab Choix;
+    private Tab Historique;
 
     private int Semestre;
 
@@ -55,10 +56,13 @@ public class VueEtudiant extends Div {
         this.Module = new Tab("Description des Modules");
         this.Choix = new Tab("Voeux pour les Modules");
         this.Sem = new Tab("Semestre");
+        this.Historique= new Tab("Historique des Modules");
         this.Choix.setVisible(false);
         this.Module.setVisible(false);
+        this.Historique.setVisible(false);
+        
 
-        this.tabs = new Tabs(this.Sem, this.Module, this.Choix);
+        this.tabs = new Tabs(this.Sem, this.Module, this.Choix, this.Historique);
 
         add(tabs);
 
@@ -102,6 +106,8 @@ public class VueEtudiant extends Div {
         } else if (tab.equals(this.Sem)) {
             content.add(test());
 
+        } else if (tab.equals(this.Historique)){
+            content.add(Historique(dialog));
         }
     }
 
@@ -181,6 +187,7 @@ public class VueEtudiant extends Div {
                 this.Semestre = 1;
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
+                this.Historique.setVisible(true);
             }
             if (checkboxGroup.isSelected("S2") == true) {
                 checkboxGroup.setVisible(false);
@@ -188,6 +195,7 @@ public class VueEtudiant extends Div {
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
+                this.Historique.setVisible(true);
             }
             if (checkboxGroup.isSelected("S3") == true) {
                 checkboxGroup.setVisible(false);
@@ -195,6 +203,7 @@ public class VueEtudiant extends Div {
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
+                this.Historique.setVisible(true);
                 
             }
             if (checkboxGroup.isSelected("S4") == true) {
@@ -203,6 +212,7 @@ public class VueEtudiant extends Div {
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
+                this.Historique.setVisible(true);
             }
             if (checkboxGroup.isSelected("S5") == true) {
                 checkboxGroup.setVisible(false);
@@ -210,6 +220,7 @@ public class VueEtudiant extends Div {
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
+                this.Historique.setVisible(true);
             }
             if (checkboxGroup.isSelected("S6") == true) {
                 checkboxGroup.setVisible(false);
@@ -217,6 +228,7 @@ public class VueEtudiant extends Div {
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
+                this.Historique.setVisible(true);
             }
             if (checkboxGroup.isSelected("S7") == true) {
                 checkboxGroup.setVisible(false);
@@ -224,6 +236,7 @@ public class VueEtudiant extends Div {
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
+                this.Historique.setVisible(true);
             }
             if (checkboxGroup.isSelected("S8") == true) {
                 checkboxGroup.setVisible(false);
@@ -231,6 +244,7 @@ public class VueEtudiant extends Div {
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
+                this.Historique.setVisible(true);
             }
             if (checkboxGroup.isSelected("S9") == true) {
                 checkboxGroup.setVisible(false);
@@ -238,6 +252,7 @@ public class VueEtudiant extends Div {
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
+                this.Historique.setVisible(true);
             }
             if (checkboxGroup.isSelected("S10") == true) {
                 checkboxGroup.setVisible(false);
@@ -245,6 +260,7 @@ public class VueEtudiant extends Div {
                 this.Sem.setVisible(false);
                 this.Choix.setVisible(true);
                 this.Module.setVisible(true);
+                this.Historique.setVisible(true);
             }
 
         });
@@ -381,6 +397,18 @@ public class VueEtudiant extends Div {
         Vl.setAlignItems(FlexComponent.Alignment.END);
 
         return Vl;
+    }
+    
+    public Notification Historique( Dialog dialog) throws SQLException{
+        Statement st = con.createStatement();
+        Notification T = new Notification ("");
+        ResultSet res = st.executeQuery("Select intitule from Modules JOIN inscription ON Modules.id = inscription.idgm1 (OR)"
+                + "Modules.id = inscription.idgm2 (OR) Modules.id = inscription.idgm3 where inscription.idetudiant=" + this.IDE);
+         while (res.next()){
+             String S = res.getString("intitule");
+             T.add(S + "  ");
+         }
+         return T;
     }
 
 }
