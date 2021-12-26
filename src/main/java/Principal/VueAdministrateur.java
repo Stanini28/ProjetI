@@ -46,7 +46,7 @@ public class VueAdministrateur extends Div {
         this.CréatEtud = new Tab("Création d'Étudiant");
         this.CreatMod = new Tab("Création d'un Module");
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "passe");
+                "postgres", "postgres", "pass");
         this.GM = new Tab("Groupe de Modules");
         this.CreatS= new Tab("Création d'un Semestre");
 

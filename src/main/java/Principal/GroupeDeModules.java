@@ -22,9 +22,19 @@ public class GroupeDeModules {
         {"1","Langues","30","1"},
         {"2","Litteraire","30","1"},
         {"3","Autres", "30", "1"},
-        {"4","Science", "30","2"},
+        {"4","Sciences", "30","2"},
         {"5","Découverte", "30","2"},
-        {"6","Autres 2", "30","2"}
+        {"6","Autres 2", "30","2"},
+        
+        {"7","Animation", "30", "3"},
+        {"8","Nature", "30","3"},
+        {"9","Association", "30","3"},
+        {"10","Prévention", "30", "4"},
+        {"11","Découverte 2", "30","4"},
+        {"12","Autres 3", "30", "4"},
+        {"13","Langues 2", "30","5"},
+        {"14","CPGE", "30", "5"},
+        {"15","Autres 4", "30","5"}
     };
     
     public static List<String> Nom() {

@@ -38,7 +38,7 @@ public class Login extends Composite<LoginOverlay> {
 
     public Login() throws ClassNotFoundException, SQLException {
         Connection con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "passe");
+                "postgres", "postgres", "pass");
         
         
         
