@@ -126,6 +126,24 @@ constraint FK5 foreign key (idVoeu1GM3) references Modules(id),
 constraint FK6 foreign key (idVoeu2GM3) references Modules(id)
 )
 """);
+
+st.executeUpdate(
+"""
+create table Inscription(
+id integer primary key generated always as identity,
+idEtudiant integer,
+idModuleGM1 integer,
+idModuleGM2 integer,
+idModuleGM3 integer,
+idSemestre integer,
+
+constraint FK0 foreign key (idEtudiant) references Etudiants(id),
+constraint FK1 foreign key (idModuleGM1) references Modules(id),
+constraint FK2 foreign key (idModuleGM2) references Modules(id),
+constraint FK3 foreign key (idModuleGM3) references Modules(id),
+constraint FKS foreign key (idSemestre) references Semestre(id)
+)
+""");
 /*
 //Début partie relationnel
 st.executeUpdate(
