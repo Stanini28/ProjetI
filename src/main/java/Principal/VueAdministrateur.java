@@ -12,11 +12,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -239,6 +242,71 @@ public class VueAdministrateur extends Div {
                 Logger.getLogger(VueAdministrateur.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+            dialog.close();
+        });
+        saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        HorizontalLayout buttonLayout = new HorizontalLayout(cancelButton,
+                saveButton);
+        buttonLayout
+                .setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+
+        VerticalLayout dialogLayout = new VerticalLayout(headline, fieldLayout,
+                buttonLayout);
+        dialogLayout.setPadding(false);
+        dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
+        dialogLayout.getStyle().set("width", "300px").set("max-width", "100%");
+
+        return dialogLayout;
+    }
+    
+    /*public HorizontalLayout ModuleSuivi(Dialog dialog) throws SQLException {
+        H3 headline = new H3("Historique Etudiants");
+        headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
+                .set("font-size", "1.5em").set("font-weight", "bold");
+        Statement st = con.createStatement();
+        HorizontalLayout HL = new HorizontalLayout();
+        VerticalLayout HL1 = new VerticalLayout();
+        TextField module = new TextField("Intitule du module : ");
+        TextField semestre = new TextField("Semestre recherché : ");
+
+        ResultSet res1 = st.executeQuery("select nom, prenom, specialite from etudiants"+ 
+         "join inscription on etudiants.id = inscription.idetudiant" +
+         "join modules on modules.id = idmodulegm1 or modules.id = idmodulegm2 or modules.id = idmodulegm3"+
+         "where intitule =" + module.getValue() + "and inscription.idsemestre =" + Integer.parseInt(semestre.getValue()));
+        while (res1.next()) {
+            String nom = res1.getString("nom");
+            String prenom = res1.getString("prenom");
+            String spe = res1.getString("specialite");
+            HL1.add(nom + "\n");
+            HL1.add(prenom + "\n");
+            HL1.add(spe + "\n");
+        }
+        HL.add(HL1);
+        return HL; 
+    }*/
+    public VerticalLayout VH (Dialog dialog) throws SQLException {
+        H3 headline = new H3("Historique Etudiants");
+        headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
+                .set("font-size", "1.5em").set("font-weight", "bold");
+
+        TextField module = new TextField("Module : ");
+        TextField semestre = new TextField("Semestre : ");
+        VerticalLayout fieldLayout = new VerticalLayout(module,
+                semestre);
+        fieldLayout.setSpacing(false);
+        fieldLayout.setPadding(false);
+        fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
+
+        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        Button saveButton = new Button("Save", e -> {
+            try (Statement st = con.createStatement()) {
+         ResultSet rs = st.executeQuery("select nom, prenom, specialite from etudiants"+ 
+         "join inscription on etudiants.id = inscription.idetudiant" +
+         "join modules on modules.id = idmodulegm1 or modules.id = idmodulegm2 or modules.id = idmodulegm3"+
+         "where intitule =" + module.getValue() + "and inscription.idsemestre =" + Integer.parseInt(semestre.getValue()));
+            } catch (SQLException ex) {
+                Logger.getLogger(VueEtudiant.class.getName()).log(Level.SEVERE, null, ex);
+            }
             dialog.close();
         });
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);

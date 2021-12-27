@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Random;
 import fr.insa.beuvron.utils.ConsoleFdB;
+import java.sql.ResultSet;
 
 
 /**
@@ -38,13 +39,14 @@ return con;
     public static void main(String[] args) throws ClassNotFoundException, SQLException {    
 try ( Connection con = connectPostgresql("localhost", 5432,
 "postgres", "postgres", "pass")) {
-    schema(con);
-    createExemple(con);
+    //schema(con);
+    //createExemple(con);
     //test1(con);
     //test2(con);
     //test3(con);
     //deleteSchema(con);
     //ModuleSemestre(con);
+    ModuleSuivi(con);
     }
 }
 
@@ -376,9 +378,9 @@ references Modules(id)
                  VALUES (?,?,?,?,?)
                """)) {
             con.setAutoCommit(false);
-           int idM1=0;
-           int idM2=0;
-           int idM3=0;
+           //int idM1=0;
+           //int idM2=0;
+           //int idM3=0;
             for (int i = 0; i < idetudiants.size(); i++) {
                 
                 pst.setInt(1, Integer.valueOf(idetudiants.get(i)));
@@ -494,4 +496,21 @@ references Modules(id)
             }
         }
     }
+    
+    public static void ModuleSuivi (Connection con) throws SQLException {
+        String module = ConsoleFdB.entreeString("Quel est le module recherchée ? ");
+        int semestre = ConsoleFdB.entreeInt("Pour quel semestre ?");
+        try (Statement st = con.createStatement()) {
+         ResultSet rs = st.executeQuery("select nom, prenom, specialite from etudiants"+ 
+         "join inscription on etudiants.id = inscription.idetudiant" +
+         "join modules on modules.id = idmodulegm1 or modules.id = idmodulegm2 or modules.id = idmodulegm3"+
+         "where intitule =" + module + "and inscription.idsemestre =" + semestre);
+                while(rs.next()){
+                    String nom = rs.getString("nom");
+                    String prenom = rs.getString("prenom");
+                    String spe = rs.getString("specialite");
+                    System.out.println(nom + prenom + spe);
+                }
+            }
+        }
 }
