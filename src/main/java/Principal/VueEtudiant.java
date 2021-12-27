@@ -23,6 +23,7 @@ import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinServletRequest;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -60,22 +61,18 @@ public class VueEtudiant extends Div {
         this.Module = new Tab("Description des Modules");
         this.Choix = new Tab("Voeux pour les Modules");
         this.Sem = new Tab("Semestre");
-        this.Historique= new Tab("Historique des Modules");
+        this.Historique = new Tab("Historique des Modules");
         this.Choix.setVisible(false);
         this.Module.setVisible(false);
         this.Historique.setVisible(false);
-        
-        
-        
+
         VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
         HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
-        if (httpServletRequest.getRequestURL().length()==32 ){
-         this.IDE = httpServletRequest.getRequestURL().subSequence(31, 32).toString();}
-        else {
-            this.IDE = httpServletRequest.getRequestURL().subSequence(31, 33).toString();}
-        
-        
-        
+        if (httpServletRequest.getRequestURL().length() == 32) {
+            this.IDE = httpServletRequest.getRequestURL().subSequence(31, 32).toString();
+        } else {
+            this.IDE = httpServletRequest.getRequestURL().subSequence(31, 33).toString();
+        }
 
         this.tabs = new Tabs(this.Sem, this.Module, this.Choix, this.Historique);
 
@@ -112,7 +109,7 @@ public class VueEtudiant extends Div {
         Dialog dialog = new Dialog();
         dialog.getElement().setAttribute("aria-label", "Create new employee");
         if (tab.equals(this.Choix)) {
-            content.add(Voeux2(dialog));
+            content.add(Voeux(dialog));
 
         } else if (tab.equals(this.Module)) {
             content.add(AffichageInfo(dialog));
@@ -121,7 +118,7 @@ public class VueEtudiant extends Div {
         } else if (tab.equals(this.Sem)) {
             content.add(test());
 
-        } else if (tab.equals(this.Historique)){
+        } else if (tab.equals(this.Historique)) {
             content.add(Historique(dialog));
         }
     }
@@ -151,7 +148,7 @@ public class VueEtudiant extends Div {
         HorizontalLayout Vl = new HorizontalLayout();
         try ( Statement st = con.createStatement()) {
             ResultSet res = st.executeQuery("select * from Modules JOIN groupedeModules ON Modules.idgroupesmodules="
-                    + "groupedemodules.id where groupedemodules.idsemestre=" + this.Semestre );
+                    + "groupedemodules.id where groupedemodules.idsemestre=" + this.Semestre);
             while (res.next()) {
 
                 String nomModules = res.getString("Intitule");
@@ -160,13 +157,13 @@ public class VueEtudiant extends Div {
                 String idgroupemodule = res.getString("idgroupesmodules");
 
                 Button H = new Button(nomModules);
-                if (Math.floorMod(Integer.parseInt(idgroupemodule),3) == 1 ) {
+                if (Math.floorMod(Integer.parseInt(idgroupemodule), 3) == 1) {
                     Vl1.add(H);
                     H.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-                } else if (Math.floorMod(Integer.parseInt(idgroupemodule),3 ) == 2) {
+                } else if (Math.floorMod(Integer.parseInt(idgroupemodule), 3) == 2) {
                     Vl2.add(H);
                     H.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-                } else if (Math.floorMod(Integer.parseInt(idgroupemodule), 3 ) == 0) {
+                } else if (Math.floorMod(Integer.parseInt(idgroupemodule), 3) == 0) {
                     Vl3.add(H);
                     H.addThemeVariants(ButtonVariant.LUMO_ERROR);
                 }
@@ -190,157 +187,154 @@ public class VueEtudiant extends Div {
 
     public HorizontalLayout test() throws SQLException {
         HorizontalLayout HL = new HorizontalLayout();
-       Statement st = con.createStatement();
-       ResultSet res = st.executeQuery("select * from semestre");
-       while(res.next()){
-          String Num = res.getString("numerosem");
-          
-          Button M = new Button("S"+Num);
-          HL.add(M);
-          
-          M.addClickListener(event -> {
-             HL.setVisible(false);
-             this.Sem.setVisible(false);
-             this.Semestre=Integer.parseInt(Num);
-             this.Choix.setVisible(true);
-             this.Module.setVisible(true);
-             this.Historique.setVisible(true);
-          });
-       }
-       
+        Statement st = con.createStatement();
+        ResultSet res = st.executeQuery("select * from semestre");
+        while (res.next()) {
+            String Num = res.getString("numerosem");
+
+            Button M = new Button("S" + Num);
+            HL.add(M);
+
+            M.addClickListener(event -> {
+                HL.setVisible(false);
+                this.Sem.setVisible(false);
+                this.Semestre = Integer.parseInt(Num);
+                this.Choix.setVisible(true);
+                this.Module.setVisible(true);
+                this.Historique.setVisible(true);
+            });
+        }
 
         return HL;
     }
-
-
-    public VerticalLayout Voeux2(Dialog dialog) throws SQLException {
-
-        ComboBox<String> comboBox1 = new ComboBox<>("Voeux 2 pour le module du Groupe 1");
-        ComboBox<String> comboBox2 = new ComboBox<>("Voeux 2 pour le module du Groupe 2");
-        ComboBox<String> comboBox3 = new ComboBox<>("Voeux 2 pour le module du Groupe 3");
-
-        List<String> L1 = new ArrayList<>();
-        List<String> L2 = new ArrayList<>();
-        List<String> L3 = new ArrayList<>();
-
-        HorizontalLayout Vl = new HorizontalLayout();
-        HorizontalLayout VL = new HorizontalLayout();
-
-        VerticalLayout VLT = new VerticalLayout();
-
-        VL.add(Voeux1(dialog));
-
-        try ( Statement st = con.createStatement()) {
-            ResultSet res = st.executeQuery("select * from Modules");
-
-            while (res.next()) {
-
-                String nomModules = res.getString("Intitule");
-                String idgroupemodule = res.getString("idgroupesmodules");
-
-                if (Integer.parseInt(idgroupemodule) == 1) {
-                    L1.add(nomModules);
-
-                } else if (Integer.parseInt(idgroupemodule) == 2) {
-                    L2.add(nomModules);
-
-                } else if (Integer.parseInt(idgroupemodule) == 3) {
-                    L3.add(nomModules);
-                }
-
-                comboBox1.setItems(L1);
-                comboBox2.setItems(L2);
-                comboBox3.setItems(L3);
-            }
-
-            Vl.add(comboBox1, comboBox2, comboBox3);
-        }
-
-        VLT.add(VL, Vl);
-
-        Vl.setPadding(false);
-        return VLT;
-    }
-
-    public HorizontalLayout Voeux1(Dialog dialog) throws SQLException {
+    
+    public VerticalLayout Voeux(Dialog dialog) throws SQLException {
 
         ComboBox<String> comboBox1 = new ComboBox<>("Voeux 1 pour le module du Groupe 1");
         ComboBox<String> comboBox2 = new ComboBox<>("Voeux 1 pour le module du Groupe 2");
         ComboBox<String> comboBox3 = new ComboBox<>("Voeux 1 pour le module du Groupe 3");
+        ComboBox<String> comboBox4 = new ComboBox<>("Voeux 2 pour le module du Groupe 1");
+        ComboBox<String> comboBox5 = new ComboBox<>("Voeux 2 pour le module du Groupe 2");
+        ComboBox<String> comboBox6 = new ComboBox<>("Voeux 2 pour le module du Groupe 3");
 
         List<String> L1 = new ArrayList<>();
         List<String> L2 = new ArrayList<>();
         List<String> L3 = new ArrayList<>();
 
         HorizontalLayout Vl = new HorizontalLayout();
-
+        HorizontalLayout VL2 = new HorizontalLayout();
+        VerticalLayout HL = new VerticalLayout();
+        
         try ( Statement st = con.createStatement()) {
-            ResultSet res = st.executeQuery("select * from Modules");
+
+            ResultSet res = st.executeQuery("select intitule, idgroupesmodules from Modules"
+                    + " JOIN groupedemodules ON Modules.idgroupesmodules = groupedemodules.id"
+                    + " where groupedemodules.idsemestre =" + this.Semestre + " EXCEPT select intitule, idgroupesmodules from Modules JOIN inscription ON Modules.id = inscription.idmodulegm1 where inscription.idetudiant=" + this.IDE);
 
             while (res.next()) {
 
                 String nomModules = res.getString("Intitule");
                 String idgroupemodule = res.getString("idgroupesmodules");
 
-                if (Integer.parseInt(idgroupemodule) == 1) {
+                if (Math.floorMod(Integer.parseInt(idgroupemodule), 3) == 1) {
+
                     L1.add(nomModules);
-
-                } else if (Integer.parseInt(idgroupemodule) == 2) {
-                    L2.add(nomModules);
-
-                } else if (Integer.parseInt(idgroupemodule) == 3) {
-                    L3.add(nomModules);
                 }
-
-                comboBox1.setItems(L1);
-                comboBox2.setItems(L2);
-                comboBox3.setItems(L3);
             }
 
-            Vl.add(comboBox1, comboBox2, comboBox3);
         }
 
-        Button Save = new Button("Sauvegarder ces choix!");
-        Vl.add(Save);
-        Vl.setPadding(false);
-        Vl.setAlignItems(FlexComponent.Alignment.END);
+        try ( Statement st = con.createStatement()) {
 
-        return Vl;
-    }
-    
-    public HorizontalLayout Historique( Dialog dialog) throws SQLException{
-        Statement st = con.createStatement();
-        VerticalLayout HL1= new VerticalLayout();
-        VerticalLayout HL2= new VerticalLayout();
-        VerticalLayout HL3= new VerticalLayout();
-         HorizontalLayout HL= new HorizontalLayout();
-        System.out.println(this.IDE);
+            ResultSet res = st.executeQuery("select intitule, idgroupesmodules from Modules"
+                    + " JOIN groupedemodules ON Modules.idgroupesmodules = groupedemodules.id"
+                    + " where groupedemodules.idsemestre =" + this.Semestre + " EXCEPT select intitule, idgroupesmodules from Modules JOIN inscription ON Modules.id = inscription.idmodulegm2 where inscription.idetudiant=" + this.IDE);
+
+            while (res.next()) {
+
+                String nomModules = res.getString("Intitule");
+                String idgroupemodule = res.getString("idgroupesmodules");
+
+                if (Math.floorMod(Integer.parseInt(idgroupemodule), 3) == 2) {
+
+                    L2.add(nomModules);
+                }
+            }
+
+        }
+        try ( Statement st = con.createStatement()) {
+
+            ResultSet res = st.executeQuery("select intitule, idgroupesmodules from Modules"
+                    + " JOIN groupedemodules ON Modules.idgroupesmodules = groupedemodules.id"
+                    + " where groupedemodules.idsemestre =" + this.Semestre + " EXCEPT select intitule, idgroupesmodules from Modules JOIN inscription ON Modules.id = inscription.idmodulegm3 where inscription.idetudiant=" + this.IDE);
+
+            while (res.next()) {
+
+                String nomModules = res.getString("Intitule");
+                String idgroupemodule = res.getString("idgroupesmodules");
+
+                if (Math.floorMod(Integer.parseInt(idgroupemodule), 3) == 0) {
+
+                    L3.add(nomModules);
+                }
+            }
+
+        }
+
+        comboBox1.setItems(L1);
+
+        comboBox2.setItems(L2);
+        comboBox3.setItems(L3);
+        comboBox4.setItems(L1);
+
+        comboBox5.setItems(L2);
+        comboBox6.setItems(L3);
+        Vl.add(comboBox1, comboBox2, comboBox3);
+        VL2.add(comboBox4, comboBox5, comboBox6);
+        Button Save = new Button("Sauvegarder ces choix!");
+        HL.add(Vl, VL2, Save);
+        HL.setPadding(false);
+        HL.setAlignItems(FlexComponent.Alignment.END);
+        Save.addClickListener(event -> {
+            
+        });
         
+        
+        return HL;
+
+    }
+
+    public HorizontalLayout Historique(Dialog dialog) throws SQLException {
+        Statement st = con.createStatement();
+        VerticalLayout HL1 = new VerticalLayout();
+        VerticalLayout HL2 = new VerticalLayout();
+        VerticalLayout HL3 = new VerticalLayout();
+        HorizontalLayout HL = new HorizontalLayout();
+        System.out.println(this.IDE);
+
         ResultSet res1 = st.executeQuery("Select intitule from Modules JOIN inscription ON Modules.id = inscription.idmodulegm1"
                 + " where inscription.idetudiant=" + this.IDE);
-         while (res1.next()){
-             String S = res1.getString("intitule");
-             HL1.add(S+ "\n");
-             
-         }
-          ResultSet Res2 = st.executeQuery("Select intitule from Modules JOIN inscription ON Modules.id = inscription.idmodulegm2"
+        while (res1.next()) {
+            String S = res1.getString("intitule");
+            HL1.add(S + "\n");
+
+        }
+        ResultSet Res2 = st.executeQuery("Select intitule from Modules JOIN inscription ON Modules.id = inscription.idmodulegm2"
                 + " where inscription.idetudiant=" + this.IDE);
-         while (Res2.next()){
-             String S = Res2.getString("intitule");
-             HL2.add(S+ "\n");
-             
-         }
-         ResultSet Res3 = st.executeQuery("Select intitule from Modules JOIN inscription ON Modules.id = inscription.idmodulegm3"
+        while (Res2.next()) {
+            String S = Res2.getString("intitule");
+            HL2.add(S + "\n");
+
+        }
+        ResultSet Res3 = st.executeQuery("Select intitule from Modules JOIN inscription ON Modules.id = inscription.idmodulegm3"
                 + " where inscription.idetudiant=" + this.IDE);
-         while (Res3.next()){
-             String S = Res3.getString("intitule");
-             HL3.add(S+ "\n");
-             
-         }
-         HL.add(HL1, HL2, HL3);
-         return HL;
+        while (Res3.next()) {
+            String S = Res3.getString("intitule");
+            HL3.add(S + "\n");
+
+        }
+        HL.add(HL1, HL2, HL3);
+        return HL;
     }
-    
-    
 
 }
