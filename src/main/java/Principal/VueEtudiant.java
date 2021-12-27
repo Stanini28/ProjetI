@@ -7,8 +7,6 @@ package Principal;
 import static Principal.Schema.connectPostgresql;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.CheckboxGroup;
-import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
@@ -207,7 +205,7 @@ public class VueEtudiant extends Div {
 
         return HL;
     }
-    
+
     public VerticalLayout Voeux(Dialog dialog) throws SQLException {
 
         ComboBox<String> comboBox1 = new ComboBox<>("Voeux 1 pour le module du Groupe 1");
@@ -216,6 +214,7 @@ public class VueEtudiant extends Div {
         ComboBox<String> comboBox4 = new ComboBox<>("Voeux 2 pour le module du Groupe 1");
         ComboBox<String> comboBox5 = new ComboBox<>("Voeux 2 pour le module du Groupe 2");
         ComboBox<String> comboBox6 = new ComboBox<>("Voeux 2 pour le module du Groupe 3");
+        List<Integer> L4 = new ArrayList<>();
 
         List<String> L1 = new ArrayList<>();
         List<String> L2 = new ArrayList<>();
@@ -224,7 +223,7 @@ public class VueEtudiant extends Div {
         HorizontalLayout Vl = new HorizontalLayout();
         HorizontalLayout VL2 = new HorizontalLayout();
         VerticalLayout HL = new VerticalLayout();
-        
+
         try ( Statement st = con.createStatement()) {
 
             ResultSet res = st.executeQuery("select intitule, idgroupesmodules from Modules"
@@ -282,7 +281,6 @@ public class VueEtudiant extends Div {
         }
 
         comboBox1.setItems(L1);
-
         comboBox2.setItems(L2);
         comboBox3.setItems(L3);
         comboBox4.setItems(L1);
@@ -296,10 +294,90 @@ public class VueEtudiant extends Div {
         HL.setPadding(false);
         HL.setAlignItems(FlexComponent.Alignment.END);
         Save.addClickListener(event -> {
+
+            try {
+                
+                
+                Statement st = con.createStatement();
+                ResultSet res = st.executeQuery("SELECT id from Modules WHERE Modules.intitule ='"+ comboBox1.getValue()+"'") ;
+                while (res.next()) {
+                    String A =  res.getString("id");
+                    L4.add(Integer.parseInt(A));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(VueEtudiant.class.getName()).log(Level.SEVERE, null, ex);
+                Notification.show("AHH");
+            }
+
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = st.executeQuery("select id from Modules where Modules.intitule='" + comboBox2.getValue()+"'");
+                while (res.next()) {
+                    int A = res.getInt("id");
+                    L4.add(A);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(VueEtudiant.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = st.executeQuery("select id from Modules where Modules.intitule='" + comboBox3.getValue()+"'");
+                while (res.next()) {
+                    int A = res.getInt("id");
+                    L4.add(A);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(VueEtudiant.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = st.executeQuery("select id from Modules where Modules.intitule='" + comboBox4.getValue()+"'");
+                while (res.next()) {
+                    int A = res.getInt("id");
+                    L4.add(A);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(VueEtudiant.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = st.executeQuery("select id from Modules where Modules.intitule='" + comboBox5.getValue()+"'");
+                while (res.next()) {
+                    int A = res.getInt("id");
+                    L4.add(A);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(VueEtudiant.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = st.executeQuery("select id from Modules where Modules.intitule='" + comboBox6.getValue()+"'");
+                while (res.next()) {
+                    int A = res.getInt("id");
+                    L4.add(A);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(VueEtudiant.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
-        });
-        
-        
+            
+            try {
+                CréationVoeux(Integer.parseInt(IDE),L4.get(0), L4.get(3), L4.get(1), L4.get(4), L4.get(2), L4.get(5), this.Semestre );
+            } catch (SQLException ex) {
+                Logger.getLogger(VueEtudiant.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            System.out.println(comboBox1.getValue());
+            System.out.println(comboBox2.getValue());
+            System.out.println(comboBox3.getValue());
+            System.out.println(comboBox4.getValue());
+            System.out.println(comboBox5.getValue());
+            System.out.println(comboBox6.getValue());
+            System.out.println(L4.get(0));
+
+        }
+        );
+
         return HL;
 
     }
@@ -337,4 +415,22 @@ public class VueEtudiant extends Div {
         return HL;
     }
 
+    public void CréationVoeux(int IDE, int V1GM1, int V2GM1, int V1GM2, int V2GM2, int V1GM3, int V2GM3, int Semes) throws SQLException {
+
+        try ( PreparedStatement pst = con.prepareStatement(
+                """
+        insert into Voeux(idetudiant,idvoeu1gm1,idvoeu2gm1,idvoeu1gm2,idvoeu2gm2,idvoeu1gm3,idvoeu2gm3,idsemestre)
+        values (?,?,?,?,?,?,?,?)
+        """)) {
+            pst.setInt(1, IDE);
+            pst.setInt(2, V1GM1);
+            pst.setInt(3, V2GM1);
+            pst.setInt(4, V1GM2);
+            pst.setInt(5, V2GM2);
+            pst.setInt(6, V1GM3);
+            pst.setInt(7, V2GM3);
+            pst.setInt(8, Semes);
+            pst.executeUpdate();
+        }
+    }
 }
