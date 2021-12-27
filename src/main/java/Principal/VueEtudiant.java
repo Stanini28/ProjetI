@@ -19,6 +19,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinRequest;
+import com.vaadin.flow.server.VaadinService;
+import com.vaadin.flow.server.VaadinServletRequest;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -60,6 +64,17 @@ public class VueEtudiant extends Div {
         this.Choix.setVisible(false);
         this.Module.setVisible(false);
         this.Historique.setVisible(false);
+        
+        
+        
+        VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
+        HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
+        if (httpServletRequest.getRequestURL().length()==32 ){
+         this.IDE = httpServletRequest.getRequestURL().subSequence(31, 32).toString();}
+        else {
+            this.IDE = httpServletRequest.getRequestURL().subSequence(31, 33).toString();}
+        
+        
         
 
         this.tabs = new Tabs(this.Sem, this.Module, this.Choix, this.Historique);
@@ -112,7 +127,7 @@ public class VueEtudiant extends Div {
     }
 
     public String Nom(String ID, Connection con) throws SQLException {
-        String strql = "SELECT * from administrateur WHERE id ='" + ID + "'";
+        String strql = "SELECT * from etudiants WHERE id ='" + ID + "'";
         Statement st = con.createStatement();
         ResultSet resultset = st.executeQuery(strql);
         String P = "";
@@ -193,127 +208,10 @@ public class VueEtudiant extends Div {
           });
        }
        
-//        checkboxGroup.addSelectionListener(event -> {
-//            if (checkboxGroup.isSelected("S1")) {
-//                checkboxGroup.setVisible(false);
-//                this.Sem.setVisible(false);
-//                this.Semestre = 1;
-//                
-//            }
-//            if (checkboxGroup.isSelected("S2") == true) {
-//                checkboxGroup.setVisible(false);
-//                this.Semestre = 2;
-//                this.Sem.setVisible(false);
-//                this.Choix.setVisible(true);
-//                this.Module.setVisible(true);
-//                this.Historique.setVisible(true);
-//            }
-//            if (checkboxGroup.isSelected("S3") == true) {
-//                checkboxGroup.setVisible(false);
-//                this.Semestre = 3;
-//                this.Sem.setVisible(false);
-//                this.Choix.setVisible(true);
-//                this.Module.setVisible(true);
-//                this.Historique.setVisible(true);
-//                
-//            }
-//            if (checkboxGroup.isSelected("S4") == true) {
-//                checkboxGroup.setVisible(false);
-//                this.Semestre = 4;
-//                this.Sem.setVisible(false);
-//                this.Choix.setVisible(true);
-//                this.Module.setVisible(true);
-//                this.Historique.setVisible(true);
-//            }
-//            if (checkboxGroup.isSelected("S5") == true) {
-//                checkboxGroup.setVisible(false);
-//                this.Semestre = 5;
-//                this.Sem.setVisible(false);
-//                this.Choix.setVisible(true);
-//                this.Module.setVisible(true);
-//                this.Historique.setVisible(true);
-//            }
-//            if (checkboxGroup.isSelected("S6") == true) {
-//                checkboxGroup.setVisible(false);
-//                this.Semestre = 6;
-//                this.Sem.setVisible(false);
-//                this.Choix.setVisible(true);
-//                this.Module.setVisible(true);
-//                this.Historique.setVisible(true);
-//            }
-//            if (checkboxGroup.isSelected("S7") == true) {
-//                checkboxGroup.setVisible(false);
-//                this.Semestre = 7;
-//                this.Sem.setVisible(false);
-//                this.Choix.setVisible(true);
-//                this.Module.setVisible(true);
-//                this.Historique.setVisible(true);
-//            }
-//            if (checkboxGroup.isSelected("S8") == true) {
-//                checkboxGroup.setVisible(false);
-//                this.Semestre = 8;
-//                this.Sem.setVisible(false);
-//                this.Choix.setVisible(true);
-//                this.Module.setVisible(true);
-//                this.Historique.setVisible(true);
-//            }
-//            if (checkboxGroup.isSelected("S9") == true) {
-//                checkboxGroup.setVisible(false);
-//                this.Semestre = 9;
-//                this.Sem.setVisible(false);
-//                this.Choix.setVisible(true);
-//                this.Module.setVisible(true);
-//                this.Historique.setVisible(true);
-//            }
-//            if (checkboxGroup.isSelected("S10") == true) {
-//                checkboxGroup.setVisible(false);
-//                this.Semestre = 10;
-//                this.Sem.setVisible(false);
-//                this.Choix.setVisible(true);
-//                this.Module.setVisible(true);
-//                this.Historique.setVisible(true);
-//            }
-//
-//        });
 
         return HL;
     }
 
-//    public VerticalLayout AffichageGM(Dialog dialog) throws SQLException {
-//        VerticalLayout Vl = new VerticalLayout();
-//
-//        try ( Statement st = con.createStatement()) {
-//            ResultSet res = st.executeQuery("select * from Modules JOIN groupedeModules ON Modules.idgroupesmodules="
-//                    + "groupedemodules.id where groupedemodules.idsemestre=" + this.Semestre );
-//            while (res.next()) {
-//                HorizontalLayout HL = new HorizontalLayout();
-//
-//                String nomModules = res.getString("Intitule");
-//                String description = res.getString("description");
-//                String nbrPlace = res.getString("nbrPlaces");
-//                String idgroupemodule = res.getString("idgroupesmodules");
-//
-//                
-//                Button H = new Button(nomModules);
-//
-//                H.addClickListener(event -> {
-//                    Notification L = Notification.show("Description: " + description);
-//                    Notification M = Notification.show("Nombre de places disponibles:" + nbrPlace);
-//                    Notification N = Notification.show("Id du Groupe de Module : " + idgroupemodule);
-//                    N.setPosition(Notification.Position.MIDDLE);
-//                    M.setPosition(Notification.Position.MIDDLE);
-//                    L.setPosition(Notification.Position.MIDDLE);
-//
-//                });
-//                HL.add(H);
-//                Vl.add(HL);
-//            }
-//
-//        }
-//
-//        Vl.setPadding(false);
-//        return Vl;
-//    }
 
     public VerticalLayout Voeux2(Dialog dialog) throws SQLException {
 
@@ -410,16 +308,39 @@ public class VueEtudiant extends Div {
         return Vl;
     }
     
-    public Notification Historique( Dialog dialog) throws SQLException{
+    public HorizontalLayout Historique( Dialog dialog) throws SQLException{
         Statement st = con.createStatement();
-        Notification T = new Notification ("");
-        ResultSet res = st.executeQuery("Select intitule from Modules JOIN inscription ON Modules.id = inscription.idgm1 (OR)"
-                + "Modules.id = inscription.idgm2 (OR) Modules.id = inscription.idgm3 where inscription.idetudiant=" + this.IDE);
-         while (res.next()){
-             String S = res.getString("intitule");
-             T.add(S + "  ");
+        VerticalLayout HL1= new VerticalLayout();
+        VerticalLayout HL2= new VerticalLayout();
+        VerticalLayout HL3= new VerticalLayout();
+         HorizontalLayout HL= new HorizontalLayout();
+        System.out.println(this.IDE);
+        
+        ResultSet res1 = st.executeQuery("Select intitule from Modules JOIN inscription ON Modules.id = inscription.idmodulegm1"
+                + " where inscription.idetudiant=" + this.IDE);
+         while (res1.next()){
+             String S = res1.getString("intitule");
+             HL1.add(S+ "\n");
+             
          }
-         return T;
+          ResultSet Res2 = st.executeQuery("Select intitule from Modules JOIN inscription ON Modules.id = inscription.idmodulegm2"
+                + " where inscription.idetudiant=" + this.IDE);
+         while (Res2.next()){
+             String S = Res2.getString("intitule");
+             HL2.add(S+ "\n");
+             
+         }
+         ResultSet Res3 = st.executeQuery("Select intitule from Modules JOIN inscription ON Modules.id = inscription.idmodulegm3"
+                + " where inscription.idetudiant=" + this.IDE);
+         while (Res3.next()){
+             String S = Res3.getString("intitule");
+             HL3.add(S+ "\n");
+             
+         }
+         HL.add(HL1, HL2, HL3);
+         return HL;
     }
+    
+    
 
 }
