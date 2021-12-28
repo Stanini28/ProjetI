@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -37,6 +38,7 @@ public class VueAdministrateur extends Div {
     private VerticalLayout VL1;
     
     private Tab CreatS;
+    private Tab ModulSuivi;
 
     private Tab GM;
     private Tabs tabs;
@@ -49,14 +51,22 @@ public class VueAdministrateur extends Div {
         this.CréatEtud = new Tab("Création d'Étudiant");
         this.CreatMod = new Tab("Création d'un Module");
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
+                "postgres", "postgres", "passe");
         this.GM = new Tab("Groupe de Modules");
         this.CreatS= new Tab("Création d'un Semestre");
+        this.ModulSuivi= new Tab("Élèves suivant un certain Module");
+        
 
-        this.tabs = new Tabs(this.CreatMod, this.CréatEtud, this.GM, this.CreatS);
+        this.tabs = new Tabs(this.CreatMod, this.CréatEtud, this.GM, this.CreatS, this.ModulSuivi);
 
         tabs.addSelectedChangeListener(event
-                -> setContent(event.getSelectedTab())
+                -> {
+            try {
+                setContent(event.getSelectedTab());
+            } catch (SQLException ex) {
+                Logger.getLogger(VueAdministrateur.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         );
 
         content = new HorizontalLayout();
@@ -75,7 +85,7 @@ public class VueAdministrateur extends Div {
 
     }
 
-    public void setContent(Tab tab) {
+    public void setContent(Tab tab) throws SQLException {
         content.removeAll();
         Dialog dialog = new Dialog();
         dialog.getElement().setAttribute("aria-label", "Create new employee");
@@ -88,6 +98,8 @@ public class VueAdministrateur extends Div {
 //		
         }else if(tab.equals(this.CreatS)){
             content.add(CS(dialog));
+        }else if (tab.equals(this.ModulSuivi)){
+            content.add(VH(dialog));
         }
        
     }
@@ -108,8 +120,17 @@ public class VueAdministrateur extends Div {
         fieldLayout.setPadding(false);
         fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
 
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
-        Button saveButton = new Button("Save", e -> {
+        Button cancelButton = new Button("Cancel");
+        cancelButton.addClickListener(event ->{
+            Intitule.setValue("");
+            Desc.setValue("");
+            NBR.setValue("");
+            IDGM.setValue("");
+            dialog.close();
+        });
+        
+        
+        Button saveButton = new Button("Sauvegarder", e -> {
             try {
                 CreationUnModule(this.con, Intitule.getValue(), Desc.getValue(), NBR.getValue(), Integer.parseInt(IDGM.getValue()));
             } catch (SQLException ex) {
@@ -165,8 +186,19 @@ public class VueAdministrateur extends Div {
         fieldLayout.setPadding(false);
         fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
 
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
-        Button saveButton = new Button("Save", e -> {
+        Button cancelButton = new Button("Cancel");
+        cancelButton.addClickListener(event ->{
+            Nom.setValue("");
+            Prenom.setValue("");
+            Email.setValue("");
+            Spe.setValue("");
+            MDP.setValue("");
+            datePicker.setValue("");
+            dialog.close();
+        });
+        
+        
+        Button saveButton = new Button("Sauvegarder", e -> {
             try {
                 CreationUnEtudiant(this.con, Nom.getValue(), Prenom.getValue(), Email.getValue(), Spe.getValue(),
                         MDP.getValue(), datePicker.getValue());
@@ -234,8 +266,15 @@ public class VueAdministrateur extends Div {
         fieldLayout.setPadding(false);
         fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
 
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
-        Button saveButton = new Button("Save", e -> {
+        Button cancelButton = new Button("Cancel");
+        cancelButton.addClickListener(event->{
+            Année.setValue("");
+            Semestre.setValue("");
+            NumSem.setValue("");
+            dialog.close();
+        });
+        
+        Button saveButton = new Button("Sauvegarder", e -> {
             try {
                 CreationUnSemestre(this.con, Integer.parseInt(Année.getValue()), Integer.parseInt(Semestre.getValue()), Integer.parseInt(NumSem.getValue()));
             } catch (SQLException ex) {
@@ -259,31 +298,7 @@ public class VueAdministrateur extends Div {
         return dialogLayout;
     }
     
-    /*public HorizontalLayout ModuleSuivi(Dialog dialog) throws SQLException {
-        H3 headline = new H3("Historique Etudiants");
-        headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
-                .set("font-size", "1.5em").set("font-weight", "bold");
-        Statement st = con.createStatement();
-        HorizontalLayout HL = new HorizontalLayout();
-        VerticalLayout HL1 = new VerticalLayout();
-        TextField module = new TextField("Intitule du module : ");
-        TextField semestre = new TextField("Semestre recherché : ");
-
-        ResultSet res1 = st.executeQuery("select nom, prenom, specialite from etudiants"+ 
-         "join inscription on etudiants.id = inscription.idetudiant" +
-         "join modules on modules.id = idmodulegm1 or modules.id = idmodulegm2 or modules.id = idmodulegm3"+
-         "where intitule =" + module.getValue() + "and inscription.idsemestre =" + Integer.parseInt(semestre.getValue()));
-        while (res1.next()) {
-            String nom = res1.getString("nom");
-            String prenom = res1.getString("prenom");
-            String spe = res1.getString("specialite");
-            HL1.add(nom + "\n");
-            HL1.add(prenom + "\n");
-            HL1.add(spe + "\n");
-        }
-        HL.add(HL1);
-        return HL; 
-    }*/
+    
     public VerticalLayout VH (Dialog dialog) throws SQLException {
         H3 headline = new H3("Historique Etudiants");
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
@@ -293,17 +308,36 @@ public class VueAdministrateur extends Div {
         TextField semestre = new TextField("Semestre : ");
         VerticalLayout fieldLayout = new VerticalLayout(module,
                 semestre);
+        
         fieldLayout.setSpacing(false);
         fieldLayout.setPadding(false);
         fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
 
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
-        Button saveButton = new Button("Save", e -> {
+        Button cancelButton = new Button("Cancel");
+        cancelButton.addClickListener(event ->{
+            module.setValue("");
+            semestre.setValue("");
+            dialog.close();
+        });
+        
+        Button saveButton = new Button("Valider", e -> {
             try (Statement st = con.createStatement()) {
          ResultSet rs = st.executeQuery("select nom, prenom, specialite from etudiants"+ 
-         "join inscription on etudiants.id = inscription.idetudiant" +
-         "join modules on modules.id = idmodulegm1 or modules.id = idmodulegm2 or modules.id = idmodulegm3"+
-         "where intitule =" + module.getValue() + "and inscription.idsemestre =" + Integer.parseInt(semestre.getValue()));
+         " join inscription on etudiants.id = inscription.idetudiant" +
+         " join modules on modules.id = idmodulegm1 or modules.id = idmodulegm2 or modules.id = idmodulegm3"+
+         " where intitule ='" + module.getValue() + "'and inscription.idsemestre =" + Integer.parseInt(semestre.getValue()));
+            
+            while (rs.next()){
+                String Nom = rs.getString("nom");
+                String Prenom = rs.getString("prenom");
+                String Spé = rs.getString("specialite");
+                
+                String Total = Nom + " " + Prenom + " " + Spé +"\n";
+                Notification.show(Total, 0, Notification.Position.TOP_START);
+                
+            }
+            
+            
             } catch (SQLException ex) {
                 Logger.getLogger(VueEtudiant.class.getName()).log(Level.SEVERE, null, ex);
             }
