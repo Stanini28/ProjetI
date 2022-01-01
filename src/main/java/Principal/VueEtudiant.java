@@ -54,7 +54,7 @@ public class VueEtudiant extends Div {
 
     public VueEtudiant() throws ClassNotFoundException, SQLException {
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "passe");
+                "postgres", "postgres", "pass");
         this.VL1 = new VerticalLayout();
         this.Module = new Tab("Description des Modules");
         this.Choix = new Tab("Voeux pour les Modules");
