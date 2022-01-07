@@ -1,5 +1,6 @@
 package Principal;
 
+import static Principal.SauvegardeTxt.FichierCalcul;
 import static Principal.Schema.connectPostgresql;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -19,6 +20,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.logging.Level;
@@ -36,14 +38,17 @@ public class VueAdministrateur extends Div {
     private Tab CréatEtud;
     private Tab CreatMod;
     private VerticalLayout VL1;
+    private Tab Sauvegarde;
+   
     
     private Tab CreatS;
     private Tab ModulSuivi;
+    
 
     private Tab GM;
     private Tabs tabs;
 
-    public VueAdministrateur() throws ClassNotFoundException, SQLException {
+    public VueAdministrateur() throws ClassNotFoundException, SQLException, IOException {
         
 
         this.VL1 = new VerticalLayout();
@@ -55,15 +60,18 @@ public class VueAdministrateur extends Div {
         this.GM = new Tab("Groupe de Modules");
         this.CreatS= new Tab("Création d'un Semestre");
         this.ModulSuivi= new Tab("Élèves suivant un certain Module");
+        this.Sauvegarde= new Tab("Sauvegarde des informations");
         
 
-        this.tabs = new Tabs(this.CreatMod, this.CréatEtud, this.GM, this.CreatS, this.ModulSuivi);
+        this.tabs = new Tabs(this.CreatMod, this.CréatEtud, this.GM, this.CreatS, this.ModulSuivi, this .Sauvegarde);
 
         tabs.addSelectedChangeListener(event
                 -> {
             try {
                 setContent(event.getSelectedTab());
             } catch (SQLException ex) {
+                Logger.getLogger(VueAdministrateur.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
                 Logger.getLogger(VueAdministrateur.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -85,7 +93,7 @@ public class VueAdministrateur extends Div {
 
     }
 
-    public void setContent(Tab tab) throws SQLException {
+    public void setContent(Tab tab) throws SQLException, IOException {
         content.removeAll();
         Dialog dialog = new Dialog();
         dialog.getElement().setAttribute("aria-label", "Create new employee");
@@ -100,6 +108,8 @@ public class VueAdministrateur extends Div {
             content.add(CS(dialog));
         }else if (tab.equals(this.ModulSuivi)){
             content.add(VH(dialog));
+        } else if (tab.equals(this.Sauvegarde)){
+            content.add(FichierCalcul(this.con));
         }
        
     }

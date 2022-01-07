@@ -7,6 +7,7 @@ package Principal;
 import static Principal.Schema.connectPostgresql;
 import static Principal.Schema.createExemple;
 import static Principal.Schema.schema;
+import com.vaadin.flow.component.notification.Notification;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -170,7 +171,7 @@ try ( Connection con = connectPostgresql("localhost", 5432,
     }
 }
 
- public static void FichierCalcul(Connection con)throws SQLException, IOException{
+ public static Notification FichierCalcul(Connection con)throws SQLException, IOException{
       String NomFichier="FichierCalcul";
       String cheminFichierCalcul="C:\\Users\\Admin\\Desktop\\Sauvegarde\\"; 
       String FichierCalculTexte="C:\\Users\\Admin\\Desktop\\Sauvegarde\\FichierCalcul.txt";
@@ -243,6 +244,7 @@ if(null!=frNg){
   }         
    
   
+  return Notification.show("Sauvegarde Effectuée");
            
          
     }catch(SQLException ex){
