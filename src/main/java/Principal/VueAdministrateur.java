@@ -57,13 +57,12 @@ public class VueAdministrateur extends Div {
         this.CreatMod = new Tab("Création d'un Module");
         this.con = connectPostgresql("localhost", 5432,
                 "postgres", "postgres", "passe");
-        this.GM = new Tab("Groupe de Modules");
         this.CreatS= new Tab("Création d'un Semestre");
-        this.ModulSuivi= new Tab("Élèves suivant un certain Module");
+        this.ModulSuivi= new Tab("Élèves suivant"+ "\n un certain Module");
         this.Sauvegarde= new Tab("Sauvegarde des informations");
         
 
-        this.tabs = new Tabs(this.CreatMod, this.CréatEtud, this.GM, this.CreatS, this.ModulSuivi, this .Sauvegarde);
+        this.tabs = new Tabs(this.CreatMod, this.CréatEtud, this.CreatS, this.ModulSuivi, this .Sauvegarde);
 
         tabs.addSelectedChangeListener(event
                 -> {
@@ -82,14 +81,16 @@ public class VueAdministrateur extends Div {
         setContent(tabs.getSelectedTab());
 
         this.VL1.add(content);
+        
 
         VL1.setSpacing(false);
         VL1.setAlignItems(FlexComponent.Alignment.CENTER);
         add(tabs, VL1);
 
-        tabs.setOrientation(Tabs.Orientation.VERTICAL);
-        tabs.setHeight("240px");
-        tabs.setWidth("240px");
+        tabs.setOrientation(Tabs.Orientation.HORIZONTAL);
+        tabs.setHeight("140px");
+        tabs.setWidth("1440px");
+        
 
     }
 
@@ -99,6 +100,7 @@ public class VueAdministrateur extends Div {
         dialog.getElement().setAttribute("aria-label", "Create new employee");
 
         if (tab.equals(this.CreatMod)) {
+            
             content.add(CM(dialog));
 
         } else if (tab.equals(this.CréatEtud)) {

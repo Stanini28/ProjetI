@@ -54,7 +54,7 @@ public class VueEtudiant extends Div {
 
     public VueEtudiant() throws ClassNotFoundException, SQLException {
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
+                "postgres", "postgres", "passe");
         this.VL1 = new VerticalLayout();
         this.Module = new Tab("Description des Modules");
         this.Choix = new Tab("Voeux pour les Modules");
@@ -63,6 +63,8 @@ public class VueEtudiant extends Div {
         this.Choix.setVisible(false);
         this.Module.setVisible(false);
         this.Historique.setVisible(false);
+        
+        
 
         VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
         HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
@@ -96,9 +98,9 @@ public class VueEtudiant extends Div {
         VL1.setAlignItems(FlexComponent.Alignment.CENTER);
         add(tabs, VL1);
 
-        tabs.setOrientation(Tabs.Orientation.VERTICAL);
-        tabs.setHeight("240px");
-        tabs.setWidth("240px");
+        tabs.setOrientation(Tabs.Orientation.HORIZONTAL);
+        tabs.setHeight("40px");
+        tabs.setWidth("1440px");
 
     }
 
@@ -157,10 +159,10 @@ public class VueEtudiant extends Div {
                 Button H = new Button(nomModules);
                 if (Math.floorMod(Integer.parseInt(idgroupemodule), 3) == 1) {
                     Vl1.add(H);
-                    H.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+                    H.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
                 } else if (Math.floorMod(Integer.parseInt(idgroupemodule), 3) == 2) {
                     Vl2.add(H);
-                    H.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+                    H.addThemeVariants(ButtonVariant.MATERIAL_OUTLINED);
                 } else if (Math.floorMod(Integer.parseInt(idgroupemodule), 3) == 0) {
                     Vl3.add(H);
                     H.addThemeVariants(ButtonVariant.LUMO_ERROR);
