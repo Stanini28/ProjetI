@@ -38,12 +38,15 @@ public class Login extends Composite<LoginOverlay> {
 
     public Login() throws ClassNotFoundException, SQLException {
         Connection con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
+                "postgres", "postgres", "passe");
         
         
         
         LoginOverlay loginoverlay = getContent();
         loginoverlay.setOpened(true);
+        loginoverlay.setTitle("Connexion");
+        loginoverlay.setDescription("Veuillez rentrer vos identifiants ainsi que votre mot de passe.");
+        
 
         loginoverlay.addLoginListener(event -> {
             this.Login= event.getUsername();
