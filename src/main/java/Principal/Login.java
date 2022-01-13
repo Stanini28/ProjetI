@@ -49,6 +49,8 @@ public class Login extends Composite<LoginOverlay> {
         
         LoginOverlay loginoverlay = getContent();
         loginoverlay.setOpened(true);
+        loginoverlay.setDescription("Veuillez utiliser vos identifiants!");
+        loginoverlay.setTitle("Connexion");
 
         loginoverlay.addLoginListener(event -> {
             this.Login= event.getUsername();
