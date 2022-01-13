@@ -44,7 +44,7 @@ public class VueA extends AppLayout {
 
         
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "passe");
+                "postgres", "postgres", "pass");
         
         VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
         HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
@@ -66,7 +66,7 @@ public class VueA extends AppLayout {
         
         addToNavbar(true, createHeaderContent());
        
-       
+
 
       
     }
@@ -86,7 +86,7 @@ public class VueA extends AppLayout {
         HorizontalLayout logoLayout = new HorizontalLayout();
         
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        logoLayout.add(new H1("    Administrateur/Administratrice: " + Nom(this.IDA, con)));
+        logoLayout.add(new H1("Administrateur/Administratrice: " + Nom(this.IDA, con)));
         
         layout.add(logoLayout);
 

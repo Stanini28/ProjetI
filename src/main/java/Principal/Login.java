@@ -15,7 +15,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.material.Material;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -43,16 +42,12 @@ public class Login extends Composite<LoginOverlay> {
 
     public Login() throws ClassNotFoundException, SQLException {
         Connection con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "passe");
+                "postgres", "postgres", "pass");
         
         
         
         LoginOverlay loginoverlay = getContent();
         loginoverlay.setOpened(true);
-        loginoverlay.setTitle("Connexion");
-        loginoverlay.setDescription("Veuillez rentrer vos identifiants ainsi que votre mot de passe.");
-     
-        
 
         loginoverlay.addLoginListener(event -> {
             this.Login= event.getUsername();
