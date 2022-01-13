@@ -161,7 +161,7 @@ public static void SauvegardeNombreM(Connection con)throws SQLException{
 try ( Connection con = connectPostgresql("localhost", 5432,
 "postgres", "postgres", "pass")) {
   // SauvegardeModules(con);
-  SauvegardeVoeuxId(con);
+  //SauvegardeVoeuxId(con);
   // SauvegardeEtudiants(con);
   // SauvegardeVoeuxNoms(con);
    FichierCalcul(con);
