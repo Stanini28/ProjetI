@@ -29,6 +29,7 @@ import java.util.logging.Logger;
  * @author stanislasallouche
  */
 @Route("")
+
 @Theme(value = Material.class)
 public class Login extends Composite<LoginOverlay> {
     
