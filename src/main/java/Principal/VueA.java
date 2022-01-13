@@ -19,6 +19,8 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinServletRequest;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.material.Material;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,6 +31,8 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author stanislasallouche
  */
+
+@Theme(value = Material.class)
 public class VueA extends AppLayout {
     
     private Connection con;
@@ -44,7 +48,7 @@ public class VueA extends AppLayout {
 
         
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
+                "postgres", "postgres", "passe");
         
         VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
         HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();

@@ -20,6 +20,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.material.Material;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -31,6 +33,7 @@ import java.util.logging.Logger;
  * @author stanislasallouche
  */
 @Route(value = "Administrateur/:userID", layout = VueA.class)
+
 public class VueAdministrateur extends Div {
 
     private Connection con;
@@ -56,11 +59,11 @@ public class VueAdministrateur extends Div {
         this.CréatEtud = new Tab("Création d'Étudiant");
         this.CreatMod = new Tab("Création d'un Module");
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
+                "postgres", "postgres", "passe");
         this.GM = new Tab("Groupe de Modules");
         this.CreatS= new Tab("Création d'un Semestre");
         this.ModulSuivi= new Tab("Élèves suivant un certain Module");
-        this.Sauvegarde= new Tab("Sauvegarde des informations");
+        this.Sauvegarde= new Tab("Sauvegarde");
         
 
         this.tabs = new Tabs(this.CreatMod, this.CréatEtud, this.GM, this.CreatS, this.ModulSuivi, this .Sauvegarde);
@@ -87,9 +90,9 @@ public class VueAdministrateur extends Div {
         VL1.setAlignItems(FlexComponent.Alignment.CENTER);
         add(tabs, VL1);
 
-        tabs.setOrientation(Tabs.Orientation.VERTICAL);
-        tabs.setHeight("240px");
-        tabs.setWidth("240px");
+        tabs.setOrientation(Tabs.Orientation.HORIZONTAL);
+        tabs.setHeight("100px");
+        tabs.setWidth("1440px");
 
     }
 

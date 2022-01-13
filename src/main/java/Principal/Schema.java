@@ -38,7 +38,7 @@ return con;
   
     public static void main(String[] args) throws ClassNotFoundException, SQLException {    
 try ( Connection con = connectPostgresql("localhost", 5432,
-"postgres", "postgres", "pass")) {
+"postgres", "postgres", "passe")) {
     schema(con);
     createExemple(con);
     //test1(con);

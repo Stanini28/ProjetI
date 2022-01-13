@@ -10,6 +10,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.notification.Notification;
+import static com.vaadin.flow.component.notification.Notification.Position.MIDDLE;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteConfiguration;
@@ -42,7 +43,7 @@ public class Login extends Composite<LoginOverlay> {
 
     public Login() throws ClassNotFoundException, SQLException {
         Connection con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
+                "postgres", "postgres", "passe");
         
         
         
@@ -66,7 +67,10 @@ public class Login extends Composite<LoginOverlay> {
                     this.IDA= IDa(con, Login, MDP);
                     UI.getCurrent().navigate(VueAdministrateur.class, new RouteParameters("userID",this.IDA));
                 }else {
-                       Notification.show("NON"); 
+                       Notification.show("Problème sur la Connexion!", 500, MIDDLE);
+                       
+                       
+                     
                     }
             } catch (SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);

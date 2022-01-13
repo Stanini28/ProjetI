@@ -20,6 +20,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinServletRequest;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.material.Material;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author stanislasallouche
  */
 @Route(value = "Etudiant/:userID", layout = VueE.class)
+
 public class VueEtudiant extends Div {
 
     private Connection con;
@@ -54,7 +57,7 @@ public class VueEtudiant extends Div {
 
     public VueEtudiant() throws ClassNotFoundException, SQLException {
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
+                "postgres", "postgres", "passe");
         this.VL1 = new VerticalLayout();
         this.Module = new Tab("Description des Modules");
         this.Choix = new Tab("Voeux pour les Modules");
@@ -96,9 +99,9 @@ public class VueEtudiant extends Div {
         VL1.setAlignItems(FlexComponent.Alignment.CENTER);
         add(tabs, VL1);
 
-        tabs.setOrientation(Tabs.Orientation.VERTICAL);
-        tabs.setHeight("240px");
-        tabs.setWidth("240px");
+        tabs.setOrientation(Tabs.Orientation.HORIZONTAL);
+        tabs.setHeight("100px");
+        tabs.setWidth("1440px");
 
     }
 

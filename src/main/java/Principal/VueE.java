@@ -20,12 +20,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.material.Material;
 import javax.servlet.http.HttpServletRequest;
 
 /**
  *
  * @author stanislasallouche
  */
+@Theme(value = Material.class)
 public class VueE extends AppLayout {
     private Connection con;
     private String IDA;
@@ -40,7 +43,7 @@ public class VueE extends AppLayout {
     public VueE() throws ClassNotFoundException, SQLException {
 
         this.con = connectPostgresql("localhost", 5432,
-                "postgres", "postgres", "pass");
+                "postgres", "postgres", "passe");
         
         VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
         HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
